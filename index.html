@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Document</title>
+      <link rel="stylesheet" href="./css/styles.css" />
+      <script src="./js/script.js" defer></script>
+   </head>
+   <body>
+      <header></header>
+      <main>
+         <section>
+            <h1 class="calendar-builder-title">
+               Calendar Builder - カレンダー作成ツール
+            </h1>
+            <form class="input-section-container">
+               <fieldset class="input-collection__section">
+                  <legend>
+                     <div class="input-collection__legend">Base Settings</div>
+                  </legend>
+
+                  <section class="input-collection__options">
+                     <label for="input-year">Select Year</label>
+                     <div class="inline-unit">
+                        <input
+                           name="input-year"
+                           type="number"
+                           maxlength="4"
+                           min="0"
+                           max="9999"
+                           placeholder="20xx"
+                           data-js="input-year"
+                        />
+                        <span>年</span>
+                     </div>
+
+                     <label for="input-start-month">Select Month</label>
+                     <div class="inline-unit">
+                        <input
+                           name="input-start-month"
+                           type="number"
+                           placeholder="01"
+                           data-js="input-start-month"
+                        />
+                        <span>月</span>
+                     </div>
+                     <label for="input-number-of-months"
+                        >Number of Months</label
+                     >
+                     <div class="inline-unit">
+                        <input
+                           type="number"
+                           placeholder="1"
+                           data-js="input-number-of-months"
+                        />
+                        <span>か月</span>
+                     </div>
+                  </section>
+               </fieldset>
+               <fieldset class="input-collection__section">
+                  <legend>Advanced Settings</legend>
+
+                  <section class="input-collection__options">
+                     <label for="input-year">First Weekday</label>
+                     <div class="inline-unit">
+                        <select name="" id="">
+                           <option value="0">月曜日</option>
+                           <option value="1">火曜日</option>
+                           <option value="2">水曜日</option>
+                           <option value="3">木曜日</option>
+                           <option value="4">金曜日</option>
+                           <option value="5">土曜日</option>
+                           <option value="6" selected>日曜日</option>
+                        </select>
+                     </div>
+
+                     <label for="input-start-month">Select Month</label>
+                     <input
+                        name="input-start-month"
+                        type="number"
+                        placeholder="01"
+                        data-js="input-start-month"
+                     />
+                     <label for="input-number-of-months"
+                        >Number of Months</label
+                     >
+                     <input
+                        type="number"
+                        placeholder="1"
+                        data-js="input-number-of-months"
+                     />
+                  </section>
+               </fieldset>
+            </form>
+         </section>
+      </main>
+   </body>
+</html>

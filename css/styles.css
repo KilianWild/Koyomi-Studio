@@ -1,0 +1,46 @@
+*,
+*::before,
+*::after {
+   box-sizing: border-box;
+}
+
+body {
+   background-color: rgb(255, 255, 255);
+}
+
+.calendar-builder-title {
+   margin: auto;
+   text-align: center;
+   padding-top: 40px;
+   padding-bottom: 40px;
+}
+
+.input-section-container {
+   display: flex;
+   width: 80%;
+   margin: auto;
+   flex-direction: column;
+   align-items: center;
+   gap: 20px;
+}
+
+.input-collection__section {
+   width: 50%;
+   height: 200px;
+   background-color: rgb(219, 219, 219);
+}
+
+.input-collection__legend {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+
+   padding: 0.6rem 2rem;
+   background-color: rgb(219, 219, 219);
+   text-align: center;
+}
+
+.input-collection__options {
+   display: flex;
+   flex-direction: column;
+}
