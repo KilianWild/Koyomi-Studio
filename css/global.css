@@ -1,3 +1,6 @@
+@import url(./components/koyomi.css);
+@import url(./components/settings.css);
+
 *,
 *::before,
 *::after {

@@ -4,17 +4,17 @@
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Document</title>
-      <link rel="stylesheet" href="./css/styles.css" />
+      <link rel="stylesheet" href="./css/global.css" />
       <script src="./js/script.js" defer></script>
    </head>
    <body>
       <header></header>
       <main>
          <section>
-            <h1 class="calendar-builder-title">
-               Calendar Builder - カレンダー作成ツール
+            <h1 class="koyomi-studio-title">
+               koyomi studio - カレンダー作成ツール
             </h1>
-            <form class="input-section-container">
+            <form class="input-section-container" data-js="koyomi-studio-form">
                <fieldset class="input-collection__section">
                   <legend>
                      <div class="input-collection__legend">Base Settings</div>
@@ -24,13 +24,12 @@
                      <label for="input-year">Select Year</label>
                      <div class="inline-unit">
                         <input
-                           name="input-year"
+                           name="inputYear"
                            type="number"
                            maxlength="4"
                            min="0"
                            max="9999"
                            placeholder="20xx"
-                           data-js="input-year"
                         />
                         <span>年</span>
                      </div>
@@ -38,10 +37,9 @@
                      <label for="input-start-month">Select Month</label>
                      <div class="inline-unit">
                         <input
-                           name="input-start-month"
+                           name="inputStartMonth"
                            type="number"
                            placeholder="01"
-                           data-js="input-start-month"
                         />
                         <span>月</span>
                      </div>
@@ -50,9 +48,9 @@
                      >
                      <div class="inline-unit">
                         <input
+                           name="inputNrOfMonth"
                            type="number"
                            placeholder="1"
-                           data-js="input-number-of-months"
                         />
                         <span>か月</span>
                      </div>
@@ -92,8 +90,22 @@
                      />
                   </section>
                </fieldset>
+               <button data-js="button-start-build">Build Koyomi</button>
             </form>
          </section>
+         -->
+
+         <div class="koyomi__container">
+            <div class="koyomi__days-layout">
+               <div class="koyomi__vertical-lines"></div>
+               <div class="koyomi__vertical-lines"></div>
+               <div class="koyomi__vertical-lines"></div>
+               <div class="koyomi__vertical-lines"></div>
+               <div class="koyomi__vertical-lines"></div>
+               <div class="koyomi__vertical-lines"></div>
+               <div class="koyomi__horizontal-lines"></div>
+            </div>
+         </div>
       </main>
    </body>
 </html>
