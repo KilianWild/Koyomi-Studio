@@ -3,11 +3,9 @@ let selectedYear = 0;
 let selectedMonths = 0;
 let selectedNrOfMonths = 0;
 
-const koyomiStudioForm = document.querySelector(
-   '[data-js="koyomi-studio-form"]',
-);
+const koyomiStudioForm = document.querySelector('[data-js="koyomi-studio-form"]');
 
-// <-- koyomi studio submit - read settings --y
+// <-- koyomi studio submit - read settings -
 koyomiStudioForm.addEventListener("submit", (event) => {
    event.preventDefault();
    selectedYear = event.target.elements.inputYear.value;

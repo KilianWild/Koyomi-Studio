@@ -1,5 +1,7 @@
 @import url(./components/koyomi.css);
 @import url(./components/settings.css);
+@import url(./components/background.css);
+@import url(./components/effects.css);
 
 *,
 *::before,
@@ -8,42 +10,157 @@
 }
 
 body {
-   background-color: rgb(255, 255, 255);
+   /*background: linear-gradient(45deg, #110300, #aa2d1c, #fa983c);*/
+   background: linear-gradient(45deg, #000000, #411e39, #7c3657);
+   min-height: 100vh;
+   margin: 0;
 }
 
-.calendar-builder-title {
-   margin: auto;
+main {
+   width: 100%;
+}
+
+.koyomi-studio-title {
    text-align: center;
    padding-top: 40px;
    padding-bottom: 40px;
+   min-width: 600px;
+   overflow: hidden;
+   white-space: nowrap; /* Prevent text from wrapping onto a new line */
+   text-overflow: ellipsis;
+   display: block;
+   position: relative;
+   color: #b6b6b6;
+   text-shadow: 3px 3px 4px rgba(0, 0, 0, 0.4);
 }
 
 .input-section-container {
    display: flex;
-   width: 80%;
-   margin: auto;
+   width: 100%;
    flex-direction: column;
    align-items: center;
    gap: 20px;
+   color: rgb(221, 221, 221);
 }
 
-.input-collection__section {
-   width: 50%;
-   height: 200px;
-   background-color: rgb(219, 219, 219);
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+   -webkit-appearance: none;
+   margin: 0;
+}
+input[type="number"] {
+   -moz-appearance: textfield;
 }
 
-.input-collection__legend {
+.input-field {
+   background-color: rgb(34, 34, 34);
+   border-radius: 5px;
+   border: 0px;
+   border-bottom: 1px solid rgb(146, 146, 146);
+   color: aliceblue;
+   text-align: right;
+   width: 200px;
+}
+.input-field:focus {
+   outline: 1px solid rgb(255, 26, 121);
+   border-bottom: 1px solid rgb(255, 26, 121);
+}
+
+select option {
+   background-color: #444; /* Background color for options */
+   color: white; /* Text color for options */
+   appearance: none; /* Removes default dropdown */
+   -webkit-appearance: none; /* For webkit browsers (Chrome, Safari) */
+   -moz-appearance: none; /* For Firefox */
+}
+
+select:focus {
+   background-color: #555; /* Background color when the dropdown is focused */
+}
+
+.input-collection__fieldset {
+   width: 600px;
+   background-color: rgb(45, 45, 45);
+
+   border: 1.5px solid rgb(206, 100, 158);
+   border-radius: 20px;
+   box-shadow: 0px 10px 30px 0px rgb(102, 36, 56);
+   margin-bottom: 20px;
+}
+
+.input-collection__title {
    display: flex;
    justify-content: center;
    align-items: center;
-
-   padding: 0.6rem 2rem;
-   background-color: rgb(219, 219, 219);
+   color: rgb(197, 197, 197);
    text-align: center;
+
+   margin-bottom: 40px;
 }
 
-.input-collection__options {
+.input-collection__title-font {
+   font-family: "Poppins", sans-serif;
+   letter-spacing: 1.5px;
+   font-weight: lighter;
+}
+
+.input-collection__container {
+   display: flex;
+   flex-direction: row;
+   margin-bottom: 20p;
+   justify-content: space-between;
+}
+
+.input-collection__section-right {
+   display: flex;
+   width: 60%;
+   margin-bottom: 15px;
+   height: 25px;
+
+   justify-content: flex-start;
+   gap: 10px;
+   margin-left: 24%;
+}
+.input-collection__section-left {
    display: flex;
    flex-direction: column;
+   width: 40%;
+   color: rgb(197, 197, 197);
+   font-family: "Poppins", sans-serif;
+   font-weight: lighter;
+   padding-left: 40px;
+}
+.input-collection__button-containter {
+   display: flex;
+   justify-content: flex-start;
+   margin-top: 30px;
+}
+.input-collection__button {
+   border: 0px;
+   background-color: transparent;
+   color: #e6518a;
+   font-weight: bolder;
+   padding: 20px;
+   padding-bottom: 10px;
+   font-size: 18px;
+   letter-spacing: 1px;
+}
+
+.input-collection__button.button-position__right {
+   margin-left: auto;
+}
+
+.font-poppin {
+   font-family: "Poppins", sans-serif;
+   font-weight: lighter;
+}
+
+.font-bold {
+   font-weight: bold;
+}
+
+.japanese-units {
+   position: relative;
+   font-size: 18px;
+   top: 1px;
 }
