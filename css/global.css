@@ -2,6 +2,11 @@
 @import url(./components/settings.css);
 @import url(./components/background.css);
 @import url(./components/effects.css);
+@import url(./components/builder.css);
+
+:root {
+   --koyomi-builder__vh: 297mm;
+}
 
 *,
 *::before,
@@ -11,7 +16,7 @@
 
 body {
    /*background: linear-gradient(45deg, #110300, #aa2d1c, #fa983c);*/
-   background: linear-gradient(45deg, #000000, #411e39, #7c3657);
+
    min-height: 100vh;
    margin: 0;
 }
@@ -19,7 +24,9 @@ body {
 main {
    width: 100%;
 }
-
+.koyomi-studio-background {
+   background: linear-gradient(45deg, #000000, #361d30, #692c49);
+}
 .koyomi-studio-title {
    text-align: center;
    padding-top: 40px;

@@ -3,11 +3,12 @@
    <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Document</title>
+
       <link rel="stylesheet" href="./css/global.css" />
       <script src="./js/script.js" defer></script>
+      <title>Koyomi Studio</title>
    </head>
-   <body>
+   <body class="koyomi-studio-background">
       <header></header>
       <main>
          <section class="background-effect">
@@ -65,9 +66,7 @@
             </ul>-->
          </section>
          <section class="input-section-container">
-            <h1 class="koyomi-studio-title">
-               <span class="font-poppin font-bold">Koyomi Studio</span> - カレンダー作成ツール
-            </h1>
+            <h1 class="koyomi-studio-title"><span class="font-poppin font-bold">Koyomi Studio</span> - カレンダー作成ツール</h1>
             <form data-js="koyomi-studio-form">
                <fieldset class="input-collection__fieldset">
                   <h3 class="input-collection__title">
@@ -163,14 +162,8 @@
 
                   <div class="input-collection__button-containter">
                      <button type="button" class="input-collection__button" data-js="button-start-build">Clear</button>
-                     <button type="button" class="input-collection__button" data-js="button-start-build">
-                        Standard
-                     </button>
-                     <button
-                        type="submit"
-                        class="input-collection__button button-position__right"
-                        data-js="button-start-build"
-                     >
+                     <button type="button" class="input-collection__button" data-js="button-start-build">Standard</button>
+                     <button type="submit" class="input-collection__button button-position__right" data-js="button-start-build">
                         Build
                      </button>
                   </div>
