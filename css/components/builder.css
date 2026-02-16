@@ -67,7 +67,6 @@ main.koyomi-builder-main {
    width: calc(100% - (2 * 20px));
    height: calc(100% - (2 * 20px));
 }
-
 .top-line {
    position: absolute;
 

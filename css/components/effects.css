@@ -128,7 +128,9 @@
    top: 10%;
    height: 300px;
    width: 300px;
-   animation: bubble1 47s ease-in-out infinite;
+   animation:
+      bubble1-intro 3s cubic-bezier(0.14, 0.01, 0.17, 1.05) forwards,
+      bubble1-loop 47s ease-in-out 3s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(2) {
@@ -137,7 +139,9 @@
    height: 500px;
    width: 500px;
    filter: blur(30px);
-   animation: bubble2 50s ease-in-out infinite;
+   animation:
+      bubble2-intro 3s cubic-bezier(0.14, 0.01, 0.17, 1.05) forwards,
+      bubble2-loop 50s ease-in-out 3s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(3) {
@@ -146,7 +150,9 @@
    height: 100px;
    width: 100px;
    filter: blur(2px);
-   animation: bubble3 42s ease-in-out infinite;
+   animation:
+      bubble3-intro 4s cubic-bezier(0.14, 0.01, 0.17, 1.05) forwards,
+      bubble3-loop 42s ease-in-out 3s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(4) {
@@ -155,7 +161,9 @@
    height: 400px;
    width: 400px;
    filter: blur(15px);
-   animation: bubble4 40s ease-in-out infinite;
+   animation:
+      bubble4-intro 3s cubic-bezier(0.14, 0.01, 0.17, 1.05) forwards,
+      bubble4-loop 40s ease-in-out 3s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(5) {
@@ -163,7 +171,9 @@
    top: 30%;
    height: 300px;
    width: 300px;
-   animation: bubble5 50s ease-in-out infinite;
+   animation:
+      bubble5-intro 3s cubic-bezier(0.14, 0.01, 0.17, 1.05) forwards,
+      bubble5-loop 50s ease-in-out 3s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(6) {
@@ -172,7 +182,9 @@
    height: 100px;
    width: 100px;
    filter: blur(2px);
-   animation: bubble6 30s ease-in-out infinite;
+   animation:
+      bubble6-intro 4s cubic-bezier(0.14, 0.01, 0.17, 1.05) forwards,
+      bubble6-loop 30s ease-in-out 4s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(7) {
@@ -181,7 +193,9 @@
    height: 60px;
    width: 60px;
    filter: blur(4px);
-   animation: bubble7 40s ease-in-out infinite;
+   animation:
+      bubble7-intro 3s cubic-bezier(0.14, 0.01, 0.17, 1.05) forwards,
+      bubble7-loop 40s ease-in-out 3s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(8) {
@@ -190,7 +204,9 @@
    height: 1000px;
    width: 1000px;
    filter: blur(100px);
-   animation: bubble8 40s ease-in-out infinite;
+   animation:
+      bubble8-intro 3s cubic-bezier(0.14, 0.01, 0.17, 1.05) forwards,
+      bubble8-loop 40s ease-in-out 3s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(9) {
@@ -199,7 +215,9 @@
    height: 1000px;
    width: 1000px;
    filter: blur(100px);
-   animation: bubble9 45s ease-in-out infinite;
+   animation:
+      bubble9-intro 3s cubic-bezier(0.14, 0.01, 0.17, 1.05) forwards,
+      bubble9-loop 45s ease-in-out 3s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(10) {
@@ -208,7 +226,7 @@
    height: 300px;
    width: 300px;
    filter: blur(100px);
-   animation: bubble10 50s ease-in-out infinite;
+   animation: bubble10-loop 50s ease-in-out 3s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(11) {
@@ -217,7 +235,7 @@
    height: 200px;
    width: 200px;
    filter: blur(150px);
-   animation: bubble10 35s ease-in-out infinite;
+   animation: bubble11-loop 35s ease-in-out 3s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(12) {
@@ -226,11 +244,84 @@
    height: 200px;
    width: 200px;
    filter: blur(150px);
-   animation: bubble10 45s ease-in-out infinite;
+   animation: bubble12-loop 45s ease-in-out 3s infinite;
    transform-origin: 50% 50%;
 }
 
-@keyframes bubble1 {
+@keyframes bubble1-intro {
+   0% {
+      transform: translateX(-50px);
+   }
+   100% {
+      transform: translateX(0);
+   }
+}
+@keyframes bubble2-intro {
+   0% {
+      transform: translateX(-10px);
+   }
+   100% {
+      transform: translateX(0);
+   }
+}
+@keyframes bubble3-intro {
+   0% {
+      transform: translateX(-90px);
+   }
+   100% {
+      transform: translateX(0);
+   }
+}
+@keyframes bubble4-intro {
+   0% {
+      transform: translateX(70px);
+   }
+   100% {
+      transform: translateX(0);
+   }
+}
+@keyframes bubble5-intro {
+   0% {
+      transform: translateX(-50px);
+   }
+   100% {
+      transform: translateX(0);
+   }
+}
+@keyframes bubble6-intro {
+   0% {
+      transform: translateX(110px);
+   }
+   100% {
+      transform: translateX(0);
+   }
+}
+@keyframes bubble7-intro {
+   0% {
+      transform: translateX(130px);
+   }
+   100% {
+      transform: translateX(0);
+   }
+}
+@keyframes bubble8-intro {
+   0% {
+      transform: translateX(50px);
+   }
+   100% {
+      transform: translateX(0);
+   }
+}
+@keyframes bubble9-intro {
+   0% {
+      transform: translateX(-70px);
+   }
+   100% {
+      transform: translateX(0);
+   }
+}
+
+@keyframes bubble1-loop {
    0% {
       transform: translateX(0);
    }
@@ -241,7 +332,7 @@
       transform: translateX(0);
    }
 }
-@keyframes bubble2 {
+@keyframes bubble2-loop {
    0% {
       transform: translateX(0);
    }
@@ -252,7 +343,7 @@
       transform: translateX(0);
    }
 }
-@keyframes bubble3 {
+@keyframes bubble3-loop {
    0% {
       transform: translateX(0);
    }
@@ -263,7 +354,7 @@
       transform: translateX(0);
    }
 }
-@keyframes bubble4 {
+@keyframes bubble4-loop {
    0% {
       transform: translateX(0);
    }
@@ -274,7 +365,7 @@
       transform: translateX(0);
    }
 }
-@keyframes bubble5 {
+@keyframes bubble5-loop {
    0% {
       transform: translateX(0);
    }
@@ -285,18 +376,18 @@
       transform: translateX(0);
    }
 }
-@keyframes bubble6 {
+@keyframes bubble6-loop {
    0% {
-      transform: translateX(100px);
+      transform: translateX(0px);
    }
    50% {
-      transform: translateX(40px);
+      transform: translateX(-60px);
    }
    100% {
-      transform: translateX(100px);
+      transform: translateX(0px);
    }
 }
-@keyframes bubble7 {
+@keyframes bubble7-loop {
    0% {
       transform: translateX(0);
    }
@@ -307,7 +398,7 @@
       transform: translateX(0);
    }
 }
-@keyframes bubble8 {
+@keyframes bubble8-loop {
    0% {
       transform: translateX(0);
    }
@@ -318,7 +409,7 @@
       transform: translateX(0);
    }
 }
-@keyframes bubble9 {
+@keyframes bubble9-loop {
    0% {
       transform: translateX(px);
    }
@@ -329,7 +420,7 @@
       transform: translateX(0);
    }
 }
-@keyframes bubble10 {
+@keyframes bubble10-loop {
    0% {
       transform: translateX(0);
    }
@@ -340,7 +431,7 @@
       transform: translateX(0);
    }
 }
-@keyframes bubble11 {
+@keyframes bubble11-loop {
    0% {
       transform: translateX(0);
    }
@@ -351,7 +442,7 @@
       transform: translateX(0);
    }
 }
-@keyframes bubble12 {
+@keyframes bubble12-loop {
    0% {
       transform: translateX(0);
    }
