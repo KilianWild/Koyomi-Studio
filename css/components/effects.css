@@ -130,7 +130,7 @@
    width: 300px;
    animation:
       bubble1-intro 4s cubic-bezier(0.14, 0.21, 0, 1) forwards,
-      bubble1-loop 47s ease-in-out 4s infinite;
+      bubble1-loop 45s ease-in-out 4s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(2) {
@@ -163,7 +163,7 @@
    filter: blur(15px);
    animation:
       bubble4-intro 4s cubic-bezier(0.14, 0.21, 0, 1) forwards,
-      bubble4-loop 40s ease-in-out 4s infinite;
+      bubble4-loop 45s ease-in-out 4s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(5) {
@@ -307,7 +307,7 @@
 }
 @keyframes bubble8-intro {
    0% {
-      transform: translateX(50px);
+      transform: translateX(120px);
    }
    100% {
       transform: translateX(200px);
@@ -315,7 +315,7 @@
 }
 @keyframes bubble9-intro {
    0% {
-      transform: translateX(-70px);
+      transform: translateX(0px);
    }
    100% {
       transform: translateX(-80px);

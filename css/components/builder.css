@@ -7,6 +7,7 @@
 
 body {
    font-family: "MyCustomFont", sans-serif; /* Apply the custom font */
+   background-color: rgb(37, 37, 37);
 }
 
 body.koyomi-builder-body {
@@ -30,6 +31,10 @@ main.koyomi-builder-main {
    aspect-ratio: 1.4142 /1;
    position: relative;
    border: 2px dashed red; /* Transparent border */
+   font-family: GeoSansLight, sans-serif;
+}
+
+svg text {
    font-family: GeoSansLight, sans-serif;
 }
 
