@@ -129,8 +129,8 @@
    height: 300px;
    width: 300px;
    animation:
-      bubble1-intro 3s cubic-bezier(0.14, 0.01, 0.17, 1.05) forwards,
-      bubble1-loop 47s ease-in-out 3s infinite;
+      bubble1-intro 4s cubic-bezier(0.14, 0.21, 0, 1) forwards,
+      bubble1-loop 47s ease-in-out 4s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(2) {
@@ -140,8 +140,8 @@
    width: 500px;
    filter: blur(30px);
    animation:
-      bubble2-intro 3s cubic-bezier(0.14, 0.01, 0.17, 1.05) forwards,
-      bubble2-loop 50s ease-in-out 3s infinite;
+      bubble2-intro 4s cubic-bezier(0.14, 0.21, 0, 1) forwards,
+      bubble2-loop 50s ease-in-out 4s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(3) {
@@ -151,8 +151,8 @@
    width: 100px;
    filter: blur(2px);
    animation:
-      bubble3-intro 4s cubic-bezier(0.14, 0.01, 0.17, 1.05) forwards,
-      bubble3-loop 42s ease-in-out 3s infinite;
+      bubble3-intro 5s cubic-bezier(0.14, 0.21, 0, 1) forwards,
+      bubble3-loop 42s ease-in-out 5s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(4) {
@@ -162,18 +162,18 @@
    width: 400px;
    filter: blur(15px);
    animation:
-      bubble4-intro 3s cubic-bezier(0.14, 0.01, 0.17, 1.05) forwards,
-      bubble4-loop 40s ease-in-out 3s infinite;
+      bubble4-intro 4s cubic-bezier(0.14, 0.21, 0, 1) forwards,
+      bubble4-loop 40s ease-in-out 4s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(5) {
-   left: 40%;
+   left: 44%;
    top: 30%;
    height: 300px;
    width: 300px;
    animation:
-      bubble5-intro 3s cubic-bezier(0.14, 0.01, 0.17, 1.05) forwards,
-      bubble5-loop 50s ease-in-out 3s infinite;
+      bubble5-intro 4s cubic-bezier(0.14, 0.21, 0, 1) forwards,
+      bubble5-loop 50s ease-in-out 4s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(6) {
@@ -183,8 +183,8 @@
    width: 100px;
    filter: blur(2px);
    animation:
-      bubble6-intro 4s cubic-bezier(0.14, 0.01, 0.17, 1.05) forwards,
-      bubble6-loop 30s ease-in-out 4s infinite;
+      bubble6-intro 5s cubic-bezier(0.14, 0.21, 0, 1) forwards,
+      bubble6-loop 30s ease-in-out 5s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(7) {
@@ -194,8 +194,8 @@
    width: 60px;
    filter: blur(4px);
    animation:
-      bubble7-intro 3s cubic-bezier(0.14, 0.01, 0.17, 1.05) forwards,
-      bubble7-loop 40s ease-in-out 3s infinite;
+      bubble7-intro 4s cubic-bezier(0.14, 0.21, 0, 1) forwards,
+      bubble7-loop 40s ease-in-out 4s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(8) {
@@ -205,8 +205,8 @@
    width: 1000px;
    filter: blur(100px);
    animation:
-      bubble8-intro 3s cubic-bezier(0.14, 0.01, 0.17, 1.05) forwards,
-      bubble8-loop 40s ease-in-out 3s infinite;
+      bubble8-intro 4s cubic-bezier(0.14, 0.21, 0, 1) forwards,
+      bubble8-loop 40s ease-in-out 4s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(9) {
@@ -216,8 +216,8 @@
    width: 1000px;
    filter: blur(100px);
    animation:
-      bubble9-intro 3s cubic-bezier(0.14, 0.01, 0.17, 1.05) forwards,
-      bubble9-loop 45s ease-in-out 3s infinite;
+      bubble9-intro 4s cubic-bezier(0.14, 0.21, 0, 1) forwards,
+      bubble9-loop 45s ease-in-out 4s infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(10) {
@@ -226,7 +226,7 @@
    height: 300px;
    width: 300px;
    filter: blur(100px);
-   animation: bubble10-loop 50s ease-in-out 3s infinite;
+   animation: bubble10-loop 50s ease-in-out infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(11) {
@@ -235,7 +235,7 @@
    height: 200px;
    width: 200px;
    filter: blur(150px);
-   animation: bubble11-loop 35s ease-in-out 3s infinite;
+   animation: bubble11-loop 35s ease-in-out infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(12) {
@@ -244,16 +244,17 @@
    height: 200px;
    width: 200px;
    filter: blur(150px);
-   animation: bubble12-loop 45s ease-in-out 3s infinite;
+   animation: bubble12-loop 45s ease-in-out infinite;
    transform-origin: 50% 50%;
 }
 
+/* animation intros*/
 @keyframes bubble1-intro {
    0% {
       transform: translateX(-50px);
    }
    100% {
-      transform: translateX(0);
+      transform: translateX(80px);
    }
 }
 @keyframes bubble2-intro {
@@ -261,7 +262,7 @@
       transform: translateX(-10px);
    }
    100% {
-      transform: translateX(0);
+      transform: translateX(-100px);
    }
 }
 @keyframes bubble3-intro {
@@ -269,7 +270,7 @@
       transform: translateX(-90px);
    }
    100% {
-      transform: translateX(0);
+      transform: translateX(70px);
    }
 }
 @keyframes bubble4-intro {
@@ -277,15 +278,15 @@
       transform: translateX(70px);
    }
    100% {
-      transform: translateX(0);
+      transform: translateX(-110px);
    }
 }
 @keyframes bubble5-intro {
    0% {
-      transform: translateX(-50px);
+      transform: translateX(-50px); /* nach rechts*/
    }
    100% {
-      transform: translateX(0);
+      transform: translateX(50px);
    }
 }
 @keyframes bubble6-intro {
@@ -293,7 +294,7 @@
       transform: translateX(110px);
    }
    100% {
-      transform: translateX(0);
+      transform: translateX(-60px);
    }
 }
 @keyframes bubble7-intro {
@@ -301,7 +302,7 @@
       transform: translateX(130px);
    }
    100% {
-      transform: translateX(0);
+      transform: translateX(60px);
    }
 }
 @keyframes bubble8-intro {
@@ -309,7 +310,7 @@
       transform: translateX(50px);
    }
    100% {
-      transform: translateX(0);
+      transform: translateX(200px);
    }
 }
 @keyframes bubble9-intro {
@@ -317,139 +318,140 @@
       transform: translateX(-70px);
    }
    100% {
-      transform: translateX(0);
+      transform: translateX(-80px);
    }
 }
 
+/* animation loops*/
 @keyframes bubble1-loop {
    0% {
-      transform: translateX(0);
-   }
-   50% {
       transform: translateX(80px);
    }
+   50% {
+      transform: translateX(0px);
+   }
    100% {
-      transform: translateX(0);
+      transform: translateX(80px);
    }
 }
 @keyframes bubble2-loop {
    0% {
-      transform: translateX(0);
-   }
-   50% {
       transform: translateX(-100px);
    }
+   50% {
+      transform: translateX(0px);
+   }
    100% {
-      transform: translateX(0);
+      transform: translateX(-100px);
    }
 }
 @keyframes bubble3-loop {
    0% {
-      transform: translateX(0);
-   }
-   50% {
       transform: translateX(70px);
    }
+   50% {
+      transform: translateX(0px);
+   }
    100% {
-      transform: translateX(0);
+      transform: translateX(70px);
    }
 }
 @keyframes bubble4-loop {
    0% {
-      transform: translateX(0);
-   }
-   50% {
       transform: translateX(-110px);
    }
+   50% {
+      transform: translateX(0px);
+   }
    100% {
-      transform: translateX(0);
+      transform: translateX(-110px);
    }
 }
 @keyframes bubble5-loop {
    0% {
-      transform: translateX(0);
-   }
-   50% {
       transform: translateX(50px);
    }
+   50% {
+      transform: translateX(0px);
+   }
    100% {
-      transform: translateX(0);
+      transform: translateX(50px);
    }
 }
 @keyframes bubble6-loop {
    0% {
-      transform: translateX(0px);
-   }
-   50% {
       transform: translateX(-60px);
    }
-   100% {
+   50% {
       transform: translateX(0px);
+   }
+   100% {
+      transform: translateX(-60px);
    }
 }
 @keyframes bubble7-loop {
    0% {
-      transform: translateX(0);
-   }
-   50% {
       transform: translateX(60px);
    }
+   50% {
+      transform: translateX(0px);
+   }
    100% {
-      transform: translateX(0);
+      transform: translateX(60px);
    }
 }
 @keyframes bubble8-loop {
    0% {
-      transform: translateX(0);
-   }
-   50% {
       transform: translateX(200px);
    }
+   50% {
+      transform: translateX(0px);
+   }
    100% {
-      transform: translateX(0);
+      transform: translateX(200px);
    }
 }
 @keyframes bubble9-loop {
    0% {
-      transform: translateX(px);
-   }
-   50% {
       transform: translateX(-80px);
    }
+   50% {
+      transform: translateX(0px);
+   }
    100% {
-      transform: translateX(0);
+      transform: translateX(-80px);
    }
 }
 @keyframes bubble10-loop {
    0% {
-      transform: translateX(0);
+      transform: translateX(0px);
    }
    50% {
       transform: translateX(50px);
    }
    100% {
-      transform: translateX(0);
+      transform: translateX(0px);
    }
 }
 @keyframes bubble11-loop {
    0% {
-      transform: translateX(0);
+      transform: translateX(0px);
    }
    50% {
       transform: translateX(-100px);
    }
    100% {
-      transform: translateX(0);
+      transform: translateX(0px);
    }
 }
 @keyframes bubble12-loop {
    0% {
-      transform: translateX(0);
+      transform: translateX(0px);
    }
    50% {
       transform: translateX(40px);
    }
    100% {
-      transform: translateX(0);
+      transform: translateX(0px);
    }
 }
