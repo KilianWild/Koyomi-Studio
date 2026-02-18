@@ -29,6 +29,81 @@ function builder() {
 }
 */
 
+const languages = [
+   {
+      lng: "DE",
+      year: "Jahr",
+      week: "KW",
+      month_0: "Januar",
+      month_1: "Februar",
+      month_2: "März",
+      month_3: "April",
+      month_4: "Mai",
+      month_5: "Juni",
+      month_6: "Juli",
+      month_7: "August",
+      month_8: "September",
+      month_9: "Oktober",
+      month_10: "November",
+      month_11: "Dezember",
+      weekday_0: "So",
+      weekday_1: "Mo",
+      weekday_2: "Di",
+      weekday_3: "Mi",
+      weekday_4: "Do",
+      weekday_5: "Fr",
+      weekday_6: "Sa",
+   },
+   {
+      lng: "EN",
+      year: "Year",
+      week: "CW",
+      month_0: "January",
+      month_1: "February",
+      month_2: "March",
+      month_3: "April",
+      month_4: "May",
+      month_5: "June",
+      month_6: "July",
+      month_7: "August",
+      month_8: "September",
+      month_9: "October",
+      month_10: "November",
+      month_11: "December",
+      weekday_0: "Su",
+      weekday_1: "Mo",
+      weekday_2: "Tu",
+      weekday_3: "We",
+      weekday_4: "Th",
+      weekday_5: "Fr",
+      weekday_6: "Sa",
+   },
+   {
+      lng: "JP",
+      year: "年",
+      week: "週",
+      month_0: "January",
+      month_1: "February",
+      month_2: "March",
+      month_3: "April",
+      month_4: "May",
+      month_5: "June",
+      month_6: "July",
+      month_7: "August",
+      month_8: "September",
+      month_9: "October",
+      month_10: "November",
+      month_11: "December",
+      weekday_0: "日",
+      weekday_1: "月",
+      weekday_2: "火",
+      weekday_3: "水",
+      weekday_4: "木",
+      weekday_5: "金",
+      weekday_6: "土",
+   },
+];
+
 // --< offsets>--
 const offsetTop = 0.05;
 
@@ -48,37 +123,18 @@ const constructWeekHeightRel = constructTotalDayGridHeightRel;
 const constructGapWidthRel = 0.01;
 const constructGapHeightRel = constructGapWidthRel;
 
+// --< colors >--
+
 const svg = document.querySelector('[data-js="svg"]');
 
-console.log(svg);
 svgbuilder();
 
 // <-- koyomi studio submit - read settings -
 // <----------------------------------------------
 function svgbuilder() {
-   let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-   line.setAttribute("x1", "0");
-   line.setAttribute("y1", "40");
-   line.setAttribute("x2", "960");
-   line.setAttribute("y2", "40");
-   line.setAttribute("stroke", "red");
-   line.setAttribute("stroke-width", "0.5");
-   console.log(line);
-   svg.append(line);
    /*
-   // day number
-   let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-   text.setAttribute("x", "10");
-   text.setAttribute("y", "100");
-   text.setAttribute("text-anchor", "left");
-   text.setAttribute("fill", "red");
-   text.setAttribute("font-size", "40");
-   text.textContent = "01";
-   console.log(text);
-   svg.append(text);*/
-
    // holiday
-   text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+   let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
    text.setAttribute("y", "75");
    text.setAttribute("text-anchor", "end");
    text.setAttribute("fill", "red");
@@ -96,89 +152,190 @@ function svgbuilder() {
    tspan.textContent = "Arbeit";
    text.append(tspan);
 
-   svg.append(text);
+   svg.append(text);*/
+}
 
-   // holiday
+// August 2021
+const year = 2021;
+const currentMonth = 5; //2 == March
+
+createFlavorText();
+function createFlavorText() {
+   let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+   text.setAttribute("x", "10");
+   text.setAttribute("y", "680");
+   text.setAttribute("text-anchor", "start");
+   text.classList.add("color-text-weekday");
+   text.setAttribute("font-size", "16");
+   text.setAttribute("letter-spacing", 4);
+   text.textContent = "カレンダー";
+
+   svg.append(text);
    text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-   text.setAttribute("x", "480");
-   text.setAttribute("y", "25");
-   text.setAttribute("text-anchor", "middle");
-   text.setAttribute("fill", "red");
-   text.setAttribute("font-size", "30");
-   text.setAttribute("letter-spacing", 7);
-   text.textContent = "Februar";
+   text.setAttribute("x", "990");
+   text.setAttribute("y", "680");
+   text.setAttribute("text-anchor", "end");
+   text.classList.add("color-text-weekday");
+   text.setAttribute("font-size", "16");
+   text.setAttribute("letter-spacing", 4);
+   text.textContent = languages.find((language) => language.lng == "DE").year + " " + year;
+
    svg.append(text);
 }
 
-const titleLine = { id: 1, x1: 0, x2: 960, y1: 40, y2: 40, sc: "red", sw: 0.5 };
-const dayLinesArray = [{ id: 1, x1: 0, x2: 135, y1: 50, y2: 50, sc: "red", sw: 0.5 }];
+createHEaderLine();
+function createHEaderLine() {
+   let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+   line.setAttribute("x1", "0");
+   line.setAttribute("y1", "40");
+   line.setAttribute("x2", "960");
+   line.setAttribute("y2", "40");
+   line.classList.add("color-line-weekday");
+   line.setAttribute("stroke-width", "0.5");
 
-let testArray__DayNrs = createDayNumberArray();
-function createDayNumberArray() {
+   svg.append(line);
+}
+createMonthHeader();
+function createMonthHeader() {
+   let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+   text.setAttribute("x", "480");
+   text.setAttribute("y", "25");
+   text.setAttribute("text-anchor", "middle");
+   text.classList.add("color-text-weekday");
+   text.setAttribute("font-size", "30");
+   text.setAttribute("letter-spacing", 7);
+   text.textContent = languages.find((language) => language.lng == "DE")[`month_${currentMonth}`];
+   svg.append(text);
+}
+
+createDayNameArray();
+function createDayNameArray() {
    const arr = [];
+   let obj;
+   const fontSize = 18;
+   for (let i = 0; i < 7; i++) {
+      obj = {
+         panel: i + 1,
+         x: 30 + (constructTotalDayGridWidthRel / 7) * 1000 * i,
+         y:
+            2 +
+            offsetTop * 1000 +
+            (constructTotalDayGridHeightRel + constructDayLabelHeightRel / 2 + constructGapHeightRel) * 1000,
+      };
 
-   const year = 2026;
-   const currentMonth = 2;
+      if (i % 7 < 1 || i % 7 == 6) obj.isColored = true;
+      else obj.isColored = false;
 
-   const previousMonths = currentMonth > 1 ? currentMonth - 1 : 12;
-   const followingMonths = currentMonth < 12 ? currentMonth + 1 : 1;
-   const numberOfDaysInThisMonth = new Date(year, currentMonth, 0).getDate();
-   const numberOfDaysInLastMonth = new Date(year, previousMonths, 0).getDate();
-   const numberOfDaysInNextMonth = new Date(year, followingMonths, 0).getDate();
-   const startWeekDayThisMonth = new Date(year, currentMonth, 0).getDay();
-
-   let startWeekDayLastMonth;
-   if (startWeekDayThisMonth > 0) startWeekDayLastMonth = numberOfDaysInLastMonth - (startWeekDayThisMonth - 1);
-   else startWeekDayLastMonth = null;
-
-   let startDayNextMonth;
-   if (startWeekDayThisMonth < 12) startDayNextMonth = numberOfDaysInThisMonth + startWeekDayThisMonth;
-   else startDayNextMonth = null;
-
-   const fontSize = 30;
-   const fontOffsetX = 10;
-   const fontOffsetY = 20;
-
-   // create array
-   for (let i = 0; i < 35; i++) {
-      if (i < startWeekDayThisMonth) {
-         arr.push({
-            panel: i + 1,
-            x: fontOffsetX + (constructTotalDayGridWidthRel / 7) * 1000 * (i % 7),
-            y: fontOffsetY + fontSize + offsetTop * 1000 + (constructTotalDayGridHeightRel / 5) * 1000 * Math.floor(i / 7),
-            dayNr: String(startWeekDayLastMonth + i),
-         });
-      } else if (i < numberOfDaysInThisMonth + startWeekDayThisMonth) {
-         arr.push({
-            panel: i + 1,
-            x: fontOffsetX + (constructTotalDayGridWidthRel / 7) * 1000 * (i % 7),
-            y: fontOffsetY + fontSize + offsetTop * 1000 + (constructTotalDayGridHeightRel / 5) * 1000 * Math.floor(i / 7),
-            dayNr: String(i - startWeekDayThisMonth + 1).padStart(2, "0"),
-         });
-      } else {
-         arr.push({
-            panel: i + 1,
-            x: fontOffsetX + (constructTotalDayGridWidthRel / 7) * 1000 * (i % 7),
-            y: fontOffsetY + fontSize + offsetTop * 1000 + (constructTotalDayGridHeightRel / 5) * 1000 * Math.floor(i / 7),
-            dayNr: String(i + 1 - startDayNextMonth).padStart(2, "0"),
-         });
-      }
+      arr.push(obj);
    }
-   console.log(arr);
+
+   arr.forEach((element, index) => {
+      let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      text.setAttribute("x", String(element.x));
+      text.setAttribute("y", String(element.y));
+      text.setAttribute("text-anchor", "middle");
+      text.classList.add(`color-text-${element.isColored ? "holiday" : "weekday"}`);
+      text.setAttribute("font-size", String(fontSize));
+      text.setAttribute("letter-spacing", 2);
+      text.setAttribute("dominant-baseline", "middle");
+
+      text.textContent = languages.find((language) => language.lng == "JP")[`weekday_${index}`] + ".";
+
+      svg.append(text);
+   });
+}
+
+createWeekNumberArray();
+function createWeekNumberArray() {
+   const arr = [];
+   const numberOfFirstWeekThisMonth = (currentMonth - 1) * 4;
+   const fontSize = 18;
+
+   for (let i = 0; i < 5; i++) {
+      arr.push({
+         panel: i + 1,
+         x: 2 + (constructWeekWidthRel * 1000) / 2 + (constructTotalDayGridWidthRel + constructGapWidthRel) * 1000,
+         y: offsetTop * 1000 + (constructWeekHeightRel * 1000) / 10 + ((constructWeekHeightRel * 1000) / 5) * i,
+         weekNr: numberOfFirstWeekThisMonth + i,
+      });
+   }
 
    arr.forEach((element) => {
       let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
 
-      console.log(element.x);
+      text.setAttribute("x", String(element.x));
+      text.setAttribute("y", String(element.y));
+      text.setAttribute("text-anchor", "middle");
+      text.classList.add("color-text-weekday");
+      text.setAttribute("font-size", String(fontSize));
+      text.setAttribute("letter-spacing", 2);
+      text.setAttribute("transform", `rotate(-90 ${element.x} ${element.y})`);
+      text.setAttribute("dominant-baseline", "middle");
+
+      text.textContent = languages.find((language) => language.lng == "JP").week + " " + String(element.weekNr).padStart(2, "0");
+
+      svg.append(text);
+   });
+}
+
+createDayNumberArray();
+function createDayNumberArray() {
+   const arr = [];
+   let obj;
+
+   const numberOfDaysInThisMonth = new Date(year, currentMonth + 1, 0).getDate();
+   const numberOfDaysInLastMonth = new Date(year, currentMonth, 0).getDate();
+   const endWeekDayLastMonth = new Date(year, currentMonth, 0).getDay();
+   const startWeekDayThisMonth = new Date(year, currentMonth, 1).getDay();
+
+   let startWeekDayLastMonth;
+   if (startWeekDayThisMonth >= 0) startWeekDayLastMonth = numberOfDaysInLastMonth - (startWeekDayThisMonth - 1);
+   else startWeekDayLastMonth = null;
+
+   let startPanelNextMonth;
+   if (startWeekDayThisMonth < 12) startPanelNextMonth = numberOfDaysInThisMonth + startWeekDayThisMonth;
+   else startPanelNextMonth = null;
+
+   let lastPanelLastMonth = numberOfDaysInLastMonth;
+   const fontSize = 30;
+   const fontOffsetX = 10;
+   const fontOffsetY = 20;
+   console.log("numberOfDaysInThisMonth", numberOfDaysInThisMonth);
+   console.log("numberOfDaysInLastMonth", numberOfDaysInLastMonth);
+   console.log("endWeekDayLastMonth", endWeekDayLastMonth);
+   console.log("startWeekDayLastMonth", startWeekDayLastMonth);
+   console.log("startWeekDayThisMonth", startWeekDayThisMonth);
+   console.log("startPanelNextMonth", startPanelNextMonth);
+
+   // create array
+   for (let i = 0; i < 35; i++) {
+      if (i < startWeekDayThisMonth) {
+         obj = { dayNr: String(startWeekDayLastMonth + i) };
+      } else if (i < numberOfDaysInThisMonth + startWeekDayThisMonth) {
+         obj = { dayNr: String(i - startWeekDayThisMonth + 1).padStart(2, "0") };
+      } else {
+         obj = { dayNr: String(i + 1 - startPanelNextMonth).padStart(2, "0") };
+      }
+
+      obj.panel = i + 1;
+      obj.x = fontOffsetX + (constructTotalDayGridWidthRel / 7) * 1000 * (i % 7);
+      obj.y = fontOffsetY + fontSize + offsetTop * 1000 + (constructTotalDayGridHeightRel / 5) * 1000 * Math.floor(i / 7);
+      if (i % 7 < 1 || i % 7 == 6) obj.isColored = true;
+      else obj.isColored = false;
+
+      arr.push(obj);
+   }
+
+   arr.forEach((element) => {
+      let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+
       text.setAttribute("x", String(element.x));
       text.setAttribute("y", String(element.y));
       text.setAttribute("text-anchor", "left");
-      text.setAttribute("fill", "red");
+      text.classList.add(`color-text-${element.isColored ? "holiday" : "weekday"}`);
       text.setAttribute("font-size", "40");
       text.setAttribute("letter-spacing", 2);
       text.textContent = element.dayNr;
-
-      console.log(text);
       svg.append(text);
    });
 }
@@ -309,12 +466,8 @@ function createLinesArray() {
       }
    }
 
-   console.log(arr);
-
    return arr;
 }
-
-console.log(testArray__Lines);
 
 testArray__Lines.forEach((element) => {
    line = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -324,7 +477,7 @@ testArray__Lines.forEach((element) => {
    line.setAttribute("y2", String(element.y2));
    line.setAttribute("stroke", element.sc);
    line.setAttribute("stroke-width", String(element.sw));
-   console.log(line);
+   line.classList.add("color-line-weekday");
    svg.append(line);
 });
 
