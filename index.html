@@ -9,178 +9,152 @@
       <title>Koyomi Studio</title>
    </head>
    <body class="koyomi-studio-background">
-      <header></header>
       <main>
+         <h1 class="title" data-js="title"><span class="font-geosans">Koyomi Studio</span> - カレンダー作成ツール</h1>
+         <!-- Koyomi Background Effects 
          <section class="background-effect">
             <ul class="floating-bubbles-effect">
-               <li class="floatbubble"></li>
-               <li class="floatbubble"></li>
-               <li class="floatbubble"></li>
-               <li class="floatbubble"></li>
-               <li class="floatbubble"></li>
-               <li class="floatbubble"></li>
-               <li class="floatbubble"></li>
-               <li class="floatbubble"></li>
-               <li class="floatbubble"></li>
-               <li class="floatbubble"></li>
-               <li class="floatbubble"></li>
-               <li class="floatbubble"></li>
+               <li></li>
+               <li></li>
+               <li></li>
+               <li></li>
+               <li></li>
+               <li></li>
+               <li></li>
+               <li></li>
+               <li></li>
+               <li></li>
+               <li></li>
+               <li></li>
             </ul>
-            <!--
-            <ul class="floating-particles-effect">
-               <li>
-                  <div class="glow">
-                     <div class="triangle"><div class="triangle-hollowout"></div></div>
-                  </div>
-               </li>
-               <li>
-                  <div class="glow">
-                     <div class="triangle"><div class="triangle-hollowout"></div></div>
-                  </div>
-               </li>
-               <li>
-                  <div class="glow">
-                     <div class="triangle"><div class="triangle-hollowout"></div></div>
-                  </div>
-               </li>
-               <li>
-                  <div class="glow">
-                     <div class="triangle"><div class="triangle-hollowout"></div></div>
-                  </div>
-               </li>
-               <li>
-                  <div class="glow">
-                     <div class="triangle"><div class="triangle-hollowout"></div></div>
-                  </div>
-               </li>
-               <li>
-                  <div class="glow">
-                     <div class="triangle"><div class="triangle-hollowout"></div></div>
-                  </div>
-               </li>
-               <li>
-                  <div class="glow">
-                     <div class="triangle"><div class="triangle-hollowout"></div></div>
-                  </div>
-               </li>
-            </ul>-->
-         </section>
-         <section class="input-section-container">
-            <h1 class="koyomi-studio-title"><span class="font-poppin font-bold">Koyomi Studio</span> - カレンダー作成ツール</h1>
-            <form data-js="koyomi-studio-form">
-               <fieldset class="input-collection__fieldset">
-                  <h3 class="input-collection__title">
-                     <span class="input-collection__title-font">Base Settings</span>
-                  </h3>
+         </section>-->
+         <div class="screen-wrapper">
+            <!-- Koyomi Settings -->
+            <section class="koyomi-studio__container koyomi-studio__container--active" data-js="koyomi-studio__container">
+               <form data-js="koyomi-studio_form">
+                  <fieldset class="koyomi-studio__fieldset">
+                     <h3 class="koyomi-studio__fieldset-title">
+                        <span class="koyomi-studio__title-font">Base Settings</span>
+                     </h3>
 
-                  <article class="input-collection__container">
-                     <label for="form-inputYear" class="input-collection__section-left">Calendar Year:</label>
-                     <section class="input-collection__section-right">
-                        <input
-                           id="form-inputYear"
-                           class="input-field"
-                           name="inputYear"
-                           type="number"
-                           maxlength="4"
-                           min="1999"
-                           max="9999"
-                           placeholder="Year"
-                        />
-                        <span class="japanese-units">年</span>
-                     </section>
-                  </article>
+                     <article class="koyomi-studio__input-container">
+                        <label for="form-inputYear" class="koyomi-studio__input-container-section-left">Calendar Year:</label>
+                        <section class="koyomi-studio__input-container-section-right">
+                           <input
+                              id="form-inputYear"
+                              class="koyomi-studio__input-field"
+                              name="inputYear"
+                              type="number"
+                              maxlength="4"
+                              min="1999"
+                              max="9999"
+                              placeholder="Year"
+                              data-js="form-inputYear"
+                           />
+                           <span class="japanese-units">年</span>
+                        </section>
+                     </article>
 
-                  <article class="input-collection__container">
-                     <label for="form-inputStartMonth" class="input-collection__section-left">Starting Month:</label>
-                     <section class="input-collection__section-right">
-                        <input
-                           id="form-inputStartMonth"
-                           class="input-field"
-                           name="inputStartMonth"
-                           type="number"
-                           maxlength="2"
-                           min="1"
-                           max="12"
-                           placeholder="Month"
-                        />
-                        <span class="japanese-units">月</span>
-                     </section>
-                  </article>
+                     <article class="koyomi-studio__input-container">
+                        <label for="form-inputStartMonth" class="koyomi-studio__input-container-section-left"
+                           >Starting Month:</label
+                        >
+                        <section class="koyomi-studio__input-container-section-right">
+                           <input
+                              id="form-inputStartMonth"
+                              class="koyomi-studio__input-field"
+                              name="inputStartMonth"
+                              type="number"
+                              maxlength="2"
+                              min="1"
+                              max="12"
+                              placeholder="Month"
+                              data-js="form-inputMonth"
+                           />
+                           <span class="japanese-units">月</span>
+                        </section>
+                     </article>
 
-                  <article class="input-collection__container">
-                     <label for="form-inputNrOfMonth" class="input-collection__section-left">Number of Months:</label>
-                     <section class="input-collection__section-right">
-                        <input
-                           id="form-inputNrOfMonth"
-                           class="input-field"
-                           name="inputNrOfMonth"
-                           type="number"
-                           maxlength="2"
-                           min="1"
-                           max="24"
-                           placeholder="Nr. of Months"
-                        />
-                        <span class="japanese-units">か月</span>
-                     </section>
-                  </article>
-               </fieldset>
+                     <article class="koyomi-studio__input-container">
+                        <label for="form-inputNrOfMonth" class="koyomi-studio__input-container-section-left"
+                           >Number of Months:</label
+                        >
+                        <section class="koyomi-studio__input-container-section-right">
+                           <input
+                              id="form-inputNrOfMonth"
+                              class="koyomi-studio__input-field"
+                              name="inputNrOfMonth"
+                              type="number"
+                              maxlength="2"
+                              min="1"
+                              max="24"
+                              placeholder="Nr. of Months"
+                           />
+                           <span class="japanese-units">か月</span>
+                        </section>
+                     </article>
+                  </fieldset>
 
-               <fieldset class="input-collection__fieldset">
-                  <h3 class="input-collection__title">
-                     <span class="input-collection__title-font">Advanced Settings</span>
-                  </h3>
+                  <fieldset class="koyomi-studio__fieldset">
+                     <h3 class="koyomi-studio__fieldset-title">
+                        <span class="koyomi-studio__title-font">Advanced Settings</span>
+                     </h3>
 
-                  <article class="input-collection__container">
-                     <label for="form-inputStartMonth" class="input-collection__section-left">Starting Month:</label>
-                     <section class="input-collection__section-right">
-                        <select class="input-field" name="" id="">
-                           <option value="0">月曜日</option>
-                           <option value="1">火曜日</option>
-                           <option value="2">水曜日</option>
-                           <option value="3">木曜日</option>
-                           <option value="4">金曜日</option>
-                           <option value="5">土曜日</option>
-                           <option value="6" selected>日曜日</option>
-                        </select>
-                        <span></span>
-                     </section>
-                  </article>
+                     <article class="koyomi-studio__input-container">
+                        <label for="form-inputStartMonth" class="koyomi-studio__input-container-section-left"
+                           >Starting Month:</label
+                        >
+                        <section class="koyomi-studio__input-container-section-right">
+                           <select class="koyomi-studio__input-field" name="" id="">
+                              <option value="0">月曜日</option>
+                              <option value="1">火曜日</option>
+                              <option value="2">水曜日</option>
+                              <option value="3">木曜日</option>
+                              <option value="4">金曜日</option>
+                              <option value="5">土曜日</option>
+                              <option value="6" selected>日曜日</option>
+                           </select>
+                           <span></span>
+                        </section>
+                     </article>
 
-                  <article class="input-collection__container">
-                     <label for="form-inputColor" class="input-collection__section-left">Calendar Color:</label>
-                     <section class="input-collection__section-right">
-                        <input
-                           id="form-inputColor"
-                           class="input-field"
-                           name="inputColor"
-                           type="color"
-                           placeholder="Nr. of Months"
-                        />
-                        <span class="japanese-units"></span>
-                     </section>
-                  </article>
+                     <article class="koyomi-studio__input-container">
+                        <label for="form-inputColor" class="koyomi-studio__input-container-section-left">Calendar Color:</label>
+                        <section class="koyomi-studio__input-container-section-right">
+                           <input
+                              id="form-inputColor"
+                              class="koyomi-studio__input-field"
+                              name="inputColor"
+                              type="color"
+                              placeholder="Nr. of Months"
+                           />
+                           <span class="japanese-units"></span>
+                        </section>
+                     </article>
 
-                  <div class="input-collection__button-containter">
-                     <button type="button" class="input-collection__button" data-js="button-start-build">Clear</button>
-                     <button type="button" class="input-collection__button" data-js="button-start-build">Standard</button>
-                     <button type="submit" class="input-collection__button button-position__right" data-js="button-start-build">
-                        Build
-                     </button>
+                     <div class="koyomi-studio__button-containter">
+                        <button type="button" class="koyomi-studio__button" data-js="button-start-build">Clear</button>
+                        <button type="button" class="koyomi-studio__button" data-js="button-start-build">Standard</button>
+                        <button
+                           type="submit"
+                           class="koyomi-studio__button koyomi-studio__button--position-right"
+                           data-js="button-start-build"
+                        >
+                           Build
+                        </button>
+                     </div>
+                  </fieldset>
+               </form>
+            </section>
+
+            <!-- Koyomi Construct -->
+            <section class="koyomi-builder__container" data-js="koyomi-builder__container">
+               <div class="koyomi-builder__print-sizing">
+                  <div class="koyomi-builder__print-margin">
+                     <svg viewBox="0 0 1000 1000" preserveAspectRatio="none" data-js="svg"></svg>
                   </div>
-               </fieldset>
-            </form>
-         </section>
-
-         <div class="koyomi__container">
-            <div class="koyomi__days-layout">
-               <div class="koyomi__vertical-lines"></div>
-               <div class="koyomi__vertical-lines"></div>
-               <div class="koyomi__vertical-lines"></div>
-               <div class="koyomi__vertical-lines"></div>
-               <div class="koyomi__vertical-lines"></div>
-               <div class="koyomi__vertical-lines"></div>
-               <div class="koyomi__horizontal-lines"></div>
-            </div>
+               </div>
+            </section>
          </div>
       </main>
    </body>

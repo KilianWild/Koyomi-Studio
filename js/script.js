@@ -1,33 +1,62 @@
 // <-- Global Variables : -->
 let selectedYear = 0;
-let selectedMonths = 0;
+let selectedMonth = 0;
 let selectedNrOfMonths = 0;
-/*
-const koyomiStudioForm = document.querySelector('[data-js="koyomi-studio-form"]');
+
+const koyomiStudioForm = document.querySelector('[data-js="koyomi-studio_form"]');
+const koyomiStudioContainer = document.querySelector('[data-js="koyomi-studio__container"]');
+const koyomiBuilderContainer = document.querySelector('[data-js="koyomi-builder__container"]');
+const koyomiStudioTitle = document.querySelector('[data-js="title"]');
+
+const koyomiStudioSetting_InputYear = document.querySelector('[data-js="form-inputYear"]');
+
+const todaysDate = new Date();
+
+const COORDINATE_SCALE = 1000;
+const ROWS = 5;
+const COLUMNS = 7;
+
+let numberOfDaysInThisMonth;
+let numberOfDaysInLastMonth;
+let endWeekDayLastMonth;
+let startWeekDayThisMonth;
+let startWeekDayNextMonth;
+
+let startWeekDayLastMonth;
+
+let startPanelNextMonth;
+
+koyomiStudioSetting_InputYear.value = todaysDate.getFullYear();
+const koyomiStudioSetting_InputMonth = document.querySelector('[data-js="form-inputMonth"]');
+koyomiStudioSetting_InputMonth.value = todaysDate.getMonth() + 1;
 
 // <-- koyomi studio submit - read settings -
 koyomiStudioForm.addEventListener("submit", (event) => {
    event.preventDefault();
    selectedYear = event.target.elements.inputYear.value;
-   selectedMonths = event.target.elements.inputStartMonth.value;
+   selectedMonth = event.target.elements.inputStartMonth.value;
    selectedNrOfMonths = event.target.elements.inputNrOfMonth.value;
 
+   koyomiStudioContainer.classList.remove("koyomi-studio__container--active");
+   koyomiBuilderContainer.classList.add("koyomi-builder__container--active");
+
+   koyomiStudioTitle.classList.add("koyomi-studio-title--translateY");
+
+   year = selectedYear;
+   currentMonth = selectedMonth - 1; //2 == March
+
+   numberOfDaysInThisMonth = new Date(year, currentMonth + 1, 0).getDate();
+   numberOfDaysInLastMonth = new Date(year, currentMonth, 0).getDate();
+   endWeekDayLastMonth = new Date(year, currentMonth, 0).getDay();
+   startWeekDayThisMonth = new Date(year, currentMonth, 1).getDay();
+   startWeekDayNextMonth = new Date(year, currentMonth + 1, 1).getDay();
+
+   startWeekDayLastMonth = numberOfDaysInLastMonth - (startWeekDayThisMonth - 1);
+   startPanelNextMonth = numberOfDaysInThisMonth + startWeekDayThisMonth;
+
    // start build. . .
-   builder();
+   svgbuilder();
 });
-
-function builder() {
-   let div;
-
-   // <-- remove all -->
-   koyomiStudioForm.remove();
-   document.querySelector("h1").remove();
-
-   // <-- build: -->
-   div = document.createElement("div");
-   div.innerHTML = "";
-}
-*/
 
 const languages = [
    {
@@ -123,11 +152,15 @@ const constructWeekHeightRel = constructTotalDayGridHeightRel;
 const constructGapWidthRel = 0.01;
 const constructGapHeightRel = constructGapWidthRel;
 
+const dayColumnWidthRel = constructTotalDayGridWidthRel / 7;
+const dayRowHightRel = constructTotalDayGridHeightRel / 5;
+
 // --< colors >--
 
 const svg = document.querySelector('[data-js="svg"]');
 
-svgbuilder();
+let year = null;
+let currentMonth = null;
 
 // <-- koyomi studio submit - read settings -
 // <----------------------------------------------
@@ -153,13 +186,18 @@ function svgbuilder() {
    text.append(tspan);
 
    svg.append(text);*/
+
+   createFlavorText();
+   createHEaderLine();
+   createMonthHeader();
+   createWeekNumberArray();
+   createDayNameArray();
+   createDayNumberArray();
+   createLinesArray();
 }
 
 // August 2021
-const year = 2021;
-const currentMonth = 5; //2 == March
 
-createFlavorText();
 function createFlavorText() {
    let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
    text.setAttribute("x", "10");
@@ -183,7 +221,6 @@ function createFlavorText() {
    svg.append(text);
 }
 
-createHEaderLine();
 function createHEaderLine() {
    let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
    line.setAttribute("x1", "0");
@@ -195,7 +232,7 @@ function createHEaderLine() {
 
    svg.append(line);
 }
-createMonthHeader();
+
 function createMonthHeader() {
    let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
    text.setAttribute("x", "480");
@@ -208,22 +245,21 @@ function createMonthHeader() {
    svg.append(text);
 }
 
-createDayNameArray();
 function createDayNameArray() {
    const arr = [];
    let obj;
    const fontSize = 18;
-   for (let i = 0; i < 7; i++) {
+   for (let h = 0; h < COLUMNS; h++) {
       obj = {
-         panel: i + 1,
-         x: 30 + (constructTotalDayGridWidthRel / 7) * 1000 * i,
+         panel: h + 1,
+         x: 30 + dayColumnWidthRel * COORDINATE_SCALE * h,
          y:
             2 +
-            offsetTop * 1000 +
-            (constructTotalDayGridHeightRel + constructDayLabelHeightRel / 2 + constructGapHeightRel) * 1000,
+            offsetTop * COORDINATE_SCALE +
+            (constructTotalDayGridHeightRel + constructDayLabelHeightRel / 2 + constructGapHeightRel) * COORDINATE_SCALE,
       };
 
-      if (i % 7 < 1 || i % 7 == 6) obj.isColored = true;
+      if (h % COLUMNS < 1 || h % COLUMNS == 6) obj.isColored = true;
       else obj.isColored = false;
 
       arr.push(obj);
@@ -245,18 +281,23 @@ function createDayNameArray() {
    });
 }
 
-createWeekNumberArray();
 function createWeekNumberArray() {
    const arr = [];
    const numberOfFirstWeekThisMonth = (currentMonth - 1) * 4;
    const fontSize = 18;
 
-   for (let i = 0; i < 5; i++) {
+   for (let v = 0; v < ROWS; v++) {
       arr.push({
-         panel: i + 1,
-         x: 2 + (constructWeekWidthRel * 1000) / 2 + (constructTotalDayGridWidthRel + constructGapWidthRel) * 1000,
-         y: offsetTop * 1000 + (constructWeekHeightRel * 1000) / 10 + ((constructWeekHeightRel * 1000) / 5) * i,
-         weekNr: numberOfFirstWeekThisMonth + i,
+         panel: v + 1,
+         x:
+            2 +
+            (constructWeekWidthRel * COORDINATE_SCALE) / 2 +
+            (constructTotalDayGridWidthRel + constructGapWidthRel) * COORDINATE_SCALE,
+         y:
+            offsetTop * COORDINATE_SCALE +
+            (constructWeekHeightRel * COORDINATE_SCALE) / 10 +
+            dayRowHightRel * COORDINATE_SCALE * v,
+         weekNr: numberOfFirstWeekThisMonth + 1 + v,
       });
    }
 
@@ -278,49 +319,27 @@ function createWeekNumberArray() {
    });
 }
 
-createDayNumberArray();
 function createDayNumberArray() {
    const arr = [];
    let obj;
 
-   const numberOfDaysInThisMonth = new Date(year, currentMonth + 1, 0).getDate();
-   const numberOfDaysInLastMonth = new Date(year, currentMonth, 0).getDate();
-   const endWeekDayLastMonth = new Date(year, currentMonth, 0).getDay();
-   const startWeekDayThisMonth = new Date(year, currentMonth, 1).getDay();
-
-   let startWeekDayLastMonth;
-   if (startWeekDayThisMonth >= 0) startWeekDayLastMonth = numberOfDaysInLastMonth - (startWeekDayThisMonth - 1);
-   else startWeekDayLastMonth = null;
-
-   let startPanelNextMonth;
-   if (startWeekDayThisMonth < 12) startPanelNextMonth = numberOfDaysInThisMonth + startWeekDayThisMonth;
-   else startPanelNextMonth = null;
-
-   let lastPanelLastMonth = numberOfDaysInLastMonth;
    const fontSize = 30;
    const fontOffsetX = 10;
    const fontOffsetY = 20;
-   console.log("numberOfDaysInThisMonth", numberOfDaysInThisMonth);
-   console.log("numberOfDaysInLastMonth", numberOfDaysInLastMonth);
-   console.log("endWeekDayLastMonth", endWeekDayLastMonth);
-   console.log("startWeekDayLastMonth", startWeekDayLastMonth);
-   console.log("startWeekDayThisMonth", startWeekDayThisMonth);
-   console.log("startPanelNextMonth", startPanelNextMonth);
 
-   // create array
    for (let i = 0; i < 35; i++) {
       if (i < startWeekDayThisMonth) {
-         obj = { dayNr: String(startWeekDayLastMonth + i) };
+         obj = { dayNr: String(startWeekDayLastMonth + i), isFaded: true };
       } else if (i < numberOfDaysInThisMonth + startWeekDayThisMonth) {
-         obj = { dayNr: String(i - startWeekDayThisMonth + 1).padStart(2, "0") };
+         obj = { dayNr: String(i - startWeekDayThisMonth + 1).padStart(2, "0"), isFaded: false };
       } else {
-         obj = { dayNr: String(i + 1 - startPanelNextMonth).padStart(2, "0") };
+         obj = { dayNr: String(i + 1 - startPanelNextMonth).padStart(2, "0"), isFaded: true };
       }
 
       obj.panel = i + 1;
-      obj.x = fontOffsetX + (constructTotalDayGridWidthRel / 7) * 1000 * (i % 7);
-      obj.y = fontOffsetY + fontSize + offsetTop * 1000 + (constructTotalDayGridHeightRel / 5) * 1000 * Math.floor(i / 7);
-      if (i % 7 < 1 || i % 7 == 6) obj.isColored = true;
+      obj.x = fontOffsetX + dayColumnWidthRel * COORDINATE_SCALE * (i % COLUMNS);
+      obj.y = fontOffsetY + fontSize + offsetTop * COORDINATE_SCALE + dayRowHightRel * COORDINATE_SCALE * Math.floor(i / COLUMNS);
+      if (i % COLUMNS < 1 || i % COLUMNS == 6) obj.isColored = true;
       else obj.isColored = false;
 
       arr.push(obj);
@@ -332,7 +351,9 @@ function createDayNumberArray() {
       text.setAttribute("x", String(element.x));
       text.setAttribute("y", String(element.y));
       text.setAttribute("text-anchor", "left");
-      text.classList.add(`color-text-${element.isColored ? "holiday" : "weekday"}`);
+      text.classList.add(
+         `color-text-${element.isColored ? `holiday${element.isFaded ? "-faded" : ""}` : `weekday${element.isFaded ? "-faded" : ""}`}`,
+      );
       text.setAttribute("font-size", "40");
       text.setAttribute("letter-spacing", 2);
       text.textContent = element.dayNr;
@@ -340,59 +361,82 @@ function createDayNumberArray() {
    });
 }
 
-let testArray__Lines = createLinesArray();
 function createLinesArray() {
    const totalWidthPercent = 0.96;
    const arr = [];
+   let obj;
 
    // --< calc horizontal day-grid lines >--
-   for (let i = 0; i <= 5; i++) {
+   for (let v = 0; v <= ROWS; v++) {
       // --< vertical offest
-      let yOffset = (constructTotalDayGridHeightRel / 5) * 1000 * i;
-      for (let j = 0; j < 7; j++) {
+      let yOffset = dayRowHightRel * COORDINATE_SCALE * v;
+      for (let h = 0; h < COLUMNS; h++) {
          // --< horizontal offest
-         arr.push({
-            id: j,
-            x1: (constructTotalDayGridWidthRel / 7) * 1000 * j,
-            x2: (constructTotalDayGridWidthRel / 7) * 1000 * j + (constructTotalDayGridWidthRel / 7) * 1000,
+         obj = {
+            id: h,
+            x1: dayColumnWidthRel * COORDINATE_SCALE * h,
+            x2: dayColumnWidthRel * COORDINATE_SCALE * h + dayColumnWidthRel * COORDINATE_SCALE,
             y1: 50 + yOffset,
             y2: 50 + yOffset,
-            sc: "red",
             sw: 0.5,
-         });
+         };
+
+         // --< fade out previous and next month
+
+         obj.isFaded =
+            (v == 0 && h < startWeekDayThisMonth) || (v == ROWS && h >= startWeekDayNextMonth && startPanelNextMonth <= 35)
+               ? true
+               : false;
+         arr.push(obj);
       }
    }
 
    // --< calc vertical day-grid lines >--
-   for (let i = 0; i <= 7; i++) {
+   for (let h = 0; h <= COLUMNS; h++) {
       // --< horizontal offest
-      let xOffset = (constructTotalDayGridWidthRel / 7) * 1000 * i;
-      for (let j = 0; j < 5; j++) {
+      let xOffset = dayColumnWidthRel * COORDINATE_SCALE * h;
+      for (let v = 0; v < ROWS; v++) {
          // --< vertical offest
-         arr.push({
-            id: j,
+         obj = {
+            id: v,
             x1: xOffset,
             x2: xOffset,
-            y1: offsetTop * 1000 + (constructTotalDayGridHeightRel / 5) * 1000 * j,
-            y2: offsetTop * 1000 + (constructTotalDayGridHeightRel / 5) * 1000 * j + (constructTotalDayGridHeightRel / 5) * 1000,
+            y1: offsetTop * COORDINATE_SCALE + dayRowHightRel * COORDINATE_SCALE * v,
+            y2: offsetTop * COORDINATE_SCALE + dayRowHightRel * COORDINATE_SCALE * v + dayRowHightRel * COORDINATE_SCALE,
             sc: "red",
             sw: 0.5,
-         });
+         };
+         // --< fade out previous and next month
+         obj.isFaded =
+            (v == 0 && h < startWeekDayThisMonth) ||
+            (v == ROWS - 1 && (h > startWeekDayNextMonth || startWeekDayNextMonth == 0) && startPanelNextMonth <= 35)
+               ? true
+               : false;
+
+         arr.push(obj);
       }
    }
 
    // --< calc horizontal daylable-grid lines >--
-   for (let i = 0; i <= 1; i++) {
+   for (let v = 0; v <= 1; v++) {
       // --< vertical offest
-      let yOffset = (constructDayLabelHeightRel / 1) * 1000 * i;
-      for (let j = 0; j < 7; j++) {
+      let yOffset = (constructDayLabelHeightRel / 1) * COORDINATE_SCALE * v;
+      for (let h = 0; h < COLUMNS; h++) {
          // --< horizontal offest
          arr.push({
-            id: j,
-            x1: (constructDayLabelWidthRel / 7) * 1000 * j,
-            x2: (constructDayLabelWidthRel / 7) * 1000 * j + (constructDayLabelWidthRel / 7) * 1000,
-            y1: offsetTop * 1000 + constructTotalDayGridHeightRel * 1000 + constructGapHeightRel * 1000 + yOffset,
-            y2: offsetTop * 1000 + constructTotalDayGridHeightRel * 1000 + constructGapHeightRel * 1000 + yOffset,
+            id: h,
+            x1: dayColumnWidthRel * COORDINATE_SCALE * h,
+            x2: dayColumnWidthRel * COORDINATE_SCALE * h + dayColumnWidthRel * COORDINATE_SCALE,
+            y1:
+               offsetTop * COORDINATE_SCALE +
+               constructTotalDayGridHeightRel * COORDINATE_SCALE +
+               constructGapHeightRel * COORDINATE_SCALE +
+               yOffset,
+            y2:
+               offsetTop * COORDINATE_SCALE +
+               constructTotalDayGridHeightRel * COORDINATE_SCALE +
+               constructGapHeightRel * COORDINATE_SCALE +
+               yOffset,
             sc: "red",
             sw: 0.5,
          });
@@ -400,26 +444,26 @@ function createLinesArray() {
    }
 
    // --< calc vertical day-grid lines >--
-   for (let i = 0; i <= 7; i++) {
+   for (let h = 0; h <= COLUMNS; h++) {
       // --< horizontal offest
-      let xOffset = (constructDayLabelWidthRel / 7) * 1000 * i;
-      for (let j = 0; j < 1; j++) {
+      let xOffset = dayColumnWidthRel * COORDINATE_SCALE * h;
+      for (let v = 0; v < 1; v++) {
          // --< vertical offest
          arr.push({
-            id: j,
+            id: v,
             x1: xOffset,
             x2: xOffset,
             y1:
-               offsetTop * 1000 +
-               constructTotalDayGridHeightRel * 1000 +
-               constructGapHeightRel * 1000 +
-               (constructDayLabelHeightRel / 1) * 1000 * j,
+               offsetTop * COORDINATE_SCALE +
+               constructTotalDayGridHeightRel * COORDINATE_SCALE +
+               constructGapHeightRel * COORDINATE_SCALE +
+               (constructDayLabelHeightRel / 1) * COORDINATE_SCALE * v,
             y2:
-               offsetTop * 1000 +
-               constructTotalDayGridHeightRel * 1000 +
-               constructGapHeightRel * 1000 +
-               (constructDayLabelHeightRel / 1) * 1000 * j +
-               (constructDayLabelHeightRel / 1) * 1000,
+               offsetTop * COORDINATE_SCALE +
+               constructTotalDayGridHeightRel * COORDINATE_SCALE +
+               constructGapHeightRel * COORDINATE_SCALE +
+               (constructDayLabelHeightRel / 1) * COORDINATE_SCALE * v +
+               (constructDayLabelHeightRel / 1) * COORDINATE_SCALE,
             sc: "red",
             sw: 0.5,
          });
@@ -427,21 +471,24 @@ function createLinesArray() {
    }
 
    // --< calc horizontal week-grid lines >--
-   for (let i = 0; i <= 5; i++) {
+   for (let v = 0; v <= ROWS; v++) {
       // --< vertical offest
-      let yOffset = (constructWeekHeightRel / 5) * 1000 * i;
-      for (let j = 0; j < 1; j++) {
+      let yOffset = (constructWeekHeightRel / 5) * COORDINATE_SCALE * v;
+      for (let h = 0; h < 1; h++) {
          // --< horizontal offest
          arr.push({
-            id: j,
-            x1: constructTotalDayGridWidthRel * 1000 + constructGapWidthRel * 1000 + (constructWeekWidthRel / 1) * 1000 * j,
+            id: h,
+            x1:
+               constructTotalDayGridWidthRel * COORDINATE_SCALE +
+               constructGapWidthRel * COORDINATE_SCALE +
+               (constructWeekWidthRel / 1) * COORDINATE_SCALE * h,
             x2:
-               constructTotalDayGridWidthRel * 1000 +
-               constructGapWidthRel * 1000 +
-               (constructWeekWidthRel / 1) * 1000 * j +
-               (constructWeekWidthRel / 1) * 1000,
-            y1: offsetTop * 1000 + yOffset,
-            y2: offsetTop * 1000 + yOffset,
+               constructTotalDayGridWidthRel * COORDINATE_SCALE +
+               constructGapWidthRel * COORDINATE_SCALE +
+               (constructWeekWidthRel / 1) * COORDINATE_SCALE * h +
+               (constructWeekWidthRel / 1) * COORDINATE_SCALE,
+            y1: offsetTop * COORDINATE_SCALE + yOffset,
+            y2: offsetTop * COORDINATE_SCALE + yOffset,
             sc: "red",
             sw: 0.5,
          });
@@ -449,37 +496,49 @@ function createLinesArray() {
    }
 
    // --< calc vertical week-grid lines >--
-   for (let i = 0; i <= 1; i++) {
+   for (let v = 0; v <= 1; v++) {
       // --< horizontal offest
-      let xOffset = (constructWeekWidthRel / 1) * 1000 * i - 0.5; // -1 becasue of  end of div
-      for (let j = 0; j < 7; j++) {
+      let xOffset = (constructWeekWidthRel / 1) * COORDINATE_SCALE * v - 0.5; // -1 becasue of  end of div
+      for (let h = 0; h < COLUMNS; h++) {
          // --< vertical offest
          arr.push({
-            id: j,
-            x1: constructTotalDayGridWidthRel * 1000 + constructGapWidthRel * 1000 + xOffset,
-            x2: constructTotalDayGridWidthRel * 1000 + constructGapWidthRel * 1000 + xOffset,
-            y1: offsetTop * 1000 + (constructWeekHeightRel / 7) * 1000 * j,
-            y2: offsetTop * 1000 + (constructWeekHeightRel / 7) * 1000 * j + (constructWeekHeightRel / 7) * 1000,
+            id: h,
+            x1: constructTotalDayGridWidthRel * COORDINATE_SCALE + constructGapWidthRel * COORDINATE_SCALE + xOffset,
+            x2: constructTotalDayGridWidthRel * COORDINATE_SCALE + constructGapWidthRel * COORDINATE_SCALE + xOffset,
+            y1: offsetTop * COORDINATE_SCALE + (constructWeekHeightRel / 7) * COORDINATE_SCALE * h,
+            y2:
+               offsetTop * COORDINATE_SCALE +
+               (constructWeekHeightRel / 7) * COORDINATE_SCALE * h +
+               (constructWeekHeightRel / 7) * COORDINATE_SCALE,
             sc: "red",
             sw: 0.5,
          });
       }
    }
 
+   arr.forEach((element) => {
+      line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", String(element.x1));
+      line.setAttribute("y1", String(element.y1));
+      line.setAttribute("x2", String(element.x2));
+      line.setAttribute("y2", String(element.y2));
+      //line.setAttribute("stroke", element.sc);
+      line.setAttribute("stroke-width", String(element.sw));
+      line.classList.add(element.isFaded ? "color-line-weekday-faded" : "color-line-weekday");
+
+      svg.append(line);
+
+      // Animate the line
+      const length = line.getTotalLength();
+      line.style.strokeDasharray = length;
+      line.style.strokeDashoffset = length;
+
+      // Trigger animation via CSS
+      line.style.animation = "drawLine 1s ease forwards";
+   });
+
    return arr;
 }
-
-testArray__Lines.forEach((element) => {
-   line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-   line.setAttribute("x1", String(element.x1));
-   line.setAttribute("y1", String(element.y1));
-   line.setAttribute("x2", String(element.x2));
-   line.setAttribute("y2", String(element.y2));
-   line.setAttribute("stroke", element.sc);
-   line.setAttribute("stroke-width", String(element.sw));
-   line.classList.add("color-line-weekday");
-   svg.append(line);
-});
 
 function arrayShuffle(arr) {
    let a = [...arr];

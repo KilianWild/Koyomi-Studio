@@ -119,15 +119,17 @@
    position: absolute;
    /* background: linear-gradient(45deg, #7c1c07, #cc470a, #ffc56f);*/
    background: linear-gradient(45deg, #7c0747, #c5397f, #f1bced);
-   border-radius: 50%;
-   filter: blur(5px);
+   border-radius: 10px;
+   filter: blur(2px);
 }
 
 .floating-bubbles-effect li:nth-child(1) {
    left: 60%;
    top: 10%;
-   height: 300px;
-   width: 300px;
+   height: 250px;
+   width: calc(250px * 1.73);
+   border-radius: calc(min(200px/4, 200px/4));
+   border-radius: 10px;
    animation:
       bubble1-intro 4s cubic-bezier(0.14, 0.21, 0, 1) forwards,
       bubble1-loop 45s ease-in-out 4s infinite;
@@ -136,9 +138,11 @@
 .floating-bubbles-effect li:nth-child(2) {
    left: 30%;
    top: 30%;
-   height: 500px;
-   width: 500px;
-   filter: blur(30px);
+   height: 400px;
+   width: calc(400px * 1.73);
+   filter: blur(10px);
+   border-radius: calc(min(400px/4, calc(400px * 1.73) / 4));
+   border-radius: 10px;
    animation:
       bubble2-intro 4s cubic-bezier(0.14, 0.21, 0, 1) forwards,
       bubble2-loop 50s ease-in-out 4s infinite;
@@ -148,8 +152,10 @@
    left: 79%;
    top: 18%;
    height: 100px;
-   width: 100px;
+   width: calc(100px * 1.73);
    filter: blur(2px);
+   border-radius: calc(min(100px/4, calc(100px * 1.73) / 4));
+   border-radius: 10px;
    animation:
       bubble3-intro 5s cubic-bezier(0.14, 0.21, 0, 1) forwards,
       bubble3-loop 42s ease-in-out 5s infinite;
@@ -158,9 +164,11 @@
 .floating-bubbles-effect li:nth-child(4) {
    left: 19%;
    top: 18%;
-   height: 400px;
-   width: 400px;
+   height: 300px;
+   width: calc(300px * 1.73);
    filter: blur(15px);
+   border-radius: calc(min(300px/4, calc(300px * 1.73) / 4));
+   border-radius: 10px;
    animation:
       bubble4-intro 4s cubic-bezier(0.14, 0.21, 0, 1) forwards,
       bubble4-loop 45s ease-in-out 4s infinite;
@@ -169,8 +177,10 @@
 .floating-bubbles-effect li:nth-child(5) {
    left: 44%;
    top: 30%;
-   height: 300px;
-   width: 300px;
+   height: 250px;
+   width: calc(250px * 1.73);
+   border-radius: calc(min(250px/4, calc(250px * 1.73) / 4));
+   border-radius: 10px;
    animation:
       bubble5-intro 4s cubic-bezier(0.14, 0.21, 0, 1) forwards,
       bubble5-loop 50s ease-in-out 4s infinite;
@@ -180,8 +190,10 @@
    left: 19%;
    top: 45%;
    height: 100px;
-   width: 100px;
+   width: calc(100px * 1.73);
    filter: blur(2px);
+   border-radius: calc(min(100px/4, calc(100px * 1.73) / 4));
+   border-radius: 10px;
    animation:
       bubble6-intro 5s cubic-bezier(0.14, 0.21, 0, 1) forwards,
       bubble6-loop 30s ease-in-out 5s infinite;
@@ -191,8 +203,10 @@
    left: 15%;
    top: 55%;
    height: 60px;
-   width: 60px;
+   width: calc(60px * 1.73);
    filter: blur(4px);
+   border-radius: calc(min(60px/4, calc(60px * 1.73) / 4));
+   border-radius: 10px;
    animation:
       bubble7-intro 4s cubic-bezier(0.14, 0.21, 0, 1) forwards,
       bubble7-loop 40s ease-in-out 4s infinite;
@@ -204,6 +218,8 @@
    height: 1000px;
    width: 1000px;
    filter: blur(100px);
+   border-radius: calc(min(1000px/4, 1000px/4));
+   border-radius: 10px;
    animation:
       bubble8-intro 4s cubic-bezier(0.14, 0.21, 0, 1) forwards,
       bubble8-loop 40s ease-in-out 4s infinite;
@@ -215,6 +231,8 @@
    height: 1000px;
    width: 1000px;
    filter: blur(100px);
+   border-radius: calc(min(1000px/4, 1000px/4));
+   border-radius: 10px;
    animation:
       bubble9-intro 4s cubic-bezier(0.14, 0.21, 0, 1) forwards,
       bubble9-loop 45s ease-in-out 4s infinite;
@@ -223,18 +241,22 @@
 .floating-bubbles-effect li:nth-child(10) {
    right: -200px;
    top: 10%;
-   height: 300px;
-   width: 300px;
+   height: 250px;
+   width: calc(250px * 1.73);
    filter: blur(100px);
+   border-radius: calc(min(250px/4, calc(250px * 1.73) / 4));
+   border-radius: 10px;
    animation: bubble10-loop 50s ease-in-out infinite;
    transform-origin: 50% 50%;
 }
 .floating-bubbles-effect li:nth-child(11) {
    left: 10%;
-   top: 80%;
-   height: 200px;
-   width: 200px;
+   top: 90%;
+   height: 270px;
+   width: calc(270px * 1.73);
    filter: blur(150px);
+   border-radius: calc(min(270px/4, calc(270px * 1.73) / 4));
+   border-radius: 10px;
    animation: bubble11-loop 35s ease-in-out infinite;
    transform-origin: 50% 50%;
 }
@@ -242,8 +264,10 @@
    left: 40%;
    top: -100px;
    height: 200px;
-   width: 200px;
+   width: calc(200px * 1.73);
    filter: blur(150px);
+   border-radius: calc(min(200px/4, calc(200px * 1.73) / 4));
+   border-radius: 10px;
    animation: bubble12-loop 45s ease-in-out infinite;
    transform-origin: 50% 50%;
 }
@@ -259,7 +283,7 @@
 }
 @keyframes bubble2-intro {
    0% {
-      transform: translateX(-10px);
+      transform: translateX(-80px);
    }
    100% {
       transform: translateX(-100px);
@@ -283,7 +307,7 @@
 }
 @keyframes bubble5-intro {
    0% {
-      transform: translateX(-50px); /* nach rechts*/
+      transform: translateX(-50px);
    }
    100% {
       transform: translateX(50px);
@@ -302,7 +326,7 @@
       transform: translateX(130px);
    }
    100% {
-      transform: translateX(60px);
+      transform: translateX(-60px);
    }
 }
 @keyframes bubble8-intro {
@@ -391,13 +415,13 @@
 }
 @keyframes bubble7-loop {
    0% {
-      transform: translateX(60px);
+      transform: translateX(-60px);
    }
    50% {
-      transform: translateX(0px);
+      transform: translateX(60px);
    }
    100% {
-      transform: translateX(60px);
+      transform: translateX(-60px);
    }
 }
 @keyframes bubble8-loop {

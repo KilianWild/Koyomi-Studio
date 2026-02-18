@@ -1,0 +1,128 @@
+@font-face {
+   font-family: "GeoSansLight";
+   src: url("../../fonts/GeosansLight.ttf") format("truetype");
+   font-weight: normal;
+   font-style: normal;
+}
+
+/*
+         <section class="koyomi-builder__body koyomi-builder__body--hidden" data-js="koyomi-builder__container">
+            <article class="koyomi-builder-main">
+               <div class="print-wrap">
+                  <div class="koyomi-build">
+                     <div class="print-margin">
+                        <svg viewBox="0 0 1000 1000" data-js="svg"></svg>
+                     </div>
+                     */
+
+.koyomi-builder__container {
+   position: absolute;
+   top: 0;
+
+   width: 100%;
+   height: 100%;
+
+   opacity: 0;
+   pointer-events: none;
+
+   display: flex;
+   align-items: center;
+   justify-content: start;
+   flex-direction: column;
+
+   font-family: "GeoSansLight", sans-serif;
+}
+@media print {
+   .koyomi-builder__container {
+      top: 0px;
+   }
+}
+
+.koyomi-builder__container--active {
+   opacity: 1;
+   pointer-events: all;
+}
+
+.koyomi-builder__print-sizing {
+   position: relative;
+
+   top: 10vh;
+   width: 80vw;
+
+   max-width: 297mm; /*A4*/
+   min-width: 600px;
+   height: auto;
+   aspect-ratio: 1.4142 / 1;
+
+   border-radius: 10px;
+   border: 2px dashed rgb(175, 53, 53);
+
+   font-family: GeoSansLight, sans-serif;
+   margin-bottom: 4%;
+}
+
+.koyomi-builder__print-margin {
+   position: absolute;
+   inset: 3%;
+}
+
+svg text {
+   font-family: GeoSansLight, sans-serif;
+}
+
+@media print {
+   .koyomi-builder__print-sizing {
+      top: 0;
+      width: 297mm !important;
+      height: 210mm !important;
+      margin: 0 !important;
+      border: none !important;
+      page-break-inside: avoid;
+      page-break-after: always;
+   }
+   body,
+   html {
+      margin: 0;
+      border: none;
+   }
+
+   @page {
+      size: A4 landscape;
+      margin: 0;
+   }
+}
+
+.color-line-holiday {
+   stroke: var(--color-holiday);
+}
+
+.color-line-weekday {
+   stroke: var(--color-weekday);
+}
+.color-line-holiday-faded {
+   stroke: var(--color-holiday-faded);
+}
+
+.color-line-weekday-faded {
+   stroke: var(--color-weekday-faded);
+}
+.color-text-holiday {
+   fill: var(--color-holiday);
+}
+
+.color-text-weekday {
+   fill: var(--color-weekday);
+}
+.color-text-holiday-faded {
+   fill: var(--color-holiday-faded);
+}
+
+.color-text-weekday-faded {
+   fill: var(--color-weekday-faded);
+}
+
+@keyframes drawLine {
+   to {
+      stroke-dashoffset: 0;
+   }
+}
