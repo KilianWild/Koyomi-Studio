@@ -1,7 +1,12 @@
-// <-- Global Variables : -->
+import hexToHsl from "../node_modules/hex-to-hsl/index.js";
+import { normalize } from "../utils/utils.js";
+
+// <-- Global Variables :  -->
 let selectedYear = 0;
 let selectedMonth = 0;
 let selectedNrOfMonths = 0;
+
+const root = document.documentElement;
 
 const koyomiStudioForm = document.querySelector('[data-js="koyomi-studio_form"]');
 const koyomiStudioContainer = document.querySelector('[data-js="koyomi-studio__container"]');
@@ -25,38 +30,14 @@ let startWeekDayNextMonth;
 let startWeekDayLastMonth;
 
 let startPanelNextMonth;
+let selectedFirstWeekday;
 
-koyomiStudioSetting_InputYear.value = todaysDate.getFullYear();
-const koyomiStudioSetting_InputMonth = document.querySelector('[data-js="form-inputMonth"]');
-koyomiStudioSetting_InputMonth.value = todaysDate.getMonth() + 1;
+let weekdaynrSunday;
+let weekdaynrSaturday;
 
-// <-- koyomi studio submit - read settings -
-koyomiStudioForm.addEventListener("submit", (event) => {
-   event.preventDefault();
-   selectedYear = event.target.elements.inputYear.value;
-   selectedMonth = event.target.elements.inputStartMonth.value;
-   selectedNrOfMonths = event.target.elements.inputNrOfMonth.value;
-
-   koyomiStudioContainer.classList.remove("koyomi-studio__container--active");
-   koyomiBuilderContainer.classList.add("koyomi-builder__container--active");
-
-   koyomiStudioTitle.classList.add("koyomi-studio-title--translateY");
-
-   year = selectedYear;
-   currentMonth = selectedMonth - 1; //2 == March
-
-   numberOfDaysInThisMonth = new Date(year, currentMonth + 1, 0).getDate();
-   numberOfDaysInLastMonth = new Date(year, currentMonth, 0).getDate();
-   endWeekDayLastMonth = new Date(year, currentMonth, 0).getDay();
-   startWeekDayThisMonth = new Date(year, currentMonth, 1).getDay();
-   startWeekDayNextMonth = new Date(year, currentMonth + 1, 1).getDay();
-
-   startWeekDayLastMonth = numberOfDaysInLastMonth - (startWeekDayThisMonth - 1);
-   startPanelNextMonth = numberOfDaysInThisMonth + startWeekDayThisMonth;
-
-   // start build. . .
-   svgbuilder();
-});
+let calendarColorHEX;
+let calendarColorLHCArray = [];
+let calendarColorLHCArrayDarker = [];
 
 const languages = [
    {
@@ -133,11 +114,13 @@ const languages = [
    },
 ];
 
+console.log("RANGE: ", (0 - 1 + 7) % 7);
+
 // --< offsets>--
 const offsetTop = 0.05;
 
 // --< day-grid >--
-const constructTotalDayGridWidthRel = 0.96;
+const constructTotalDayGridWidthRel = 0.96; //0.96;
 const constructTotalDayGridHeightRel = 0.56;
 
 // --< daylabel-grid >--
@@ -161,6 +144,260 @@ const svg = document.querySelector('[data-js="svg"]');
 
 let year = null;
 let currentMonth = null;
+
+/*
+
+const inputField_colorHueNumber = document.querySelector('[data-js="colorHueNumber"]');
+const inputField_colorHueRange = document.querySelector('[data-js="colorHueRange"]');
+
+const inputField_cweekendColorFadeNumber = document.querySelector('[data-js="colorFadeNumber"]');
+const inputField_weekendColorFadeRange = document.querySelector('[data-js="colorFadeRange"]');
+
+const inputField_colorSaturationNumber = document.querySelector('[data-js="colorSatNumber"]');
+const inputField_colorSaturationRange = document.querySelector('[data-js="colorSatRange"]');
+
+
+
+
+const computedStyles = getComputedStyle(root);
+let cssColorArray_themeTrueColor = hexToHsl(computedStyles.getPropertyValue("--color-theme-true-color"));
+let cssColorArray_theme = hexToHsl(computedStyles.getPropertyValue("--color-theme"));
+let cssColorArray_themeHightLight = hexToHsl(computedStyles.getPropertyValue("--color-theme-hightlight"));
+let cssColorArray_holiday = hexToHsl(computedStyles.getPropertyValue("--color-holiday"));
+let cssColorArray_holidayFaded = hexToHsl(computedStyles.getPropertyValue("--color-holiday-faded"));
+let cssColorArray_weekday = hexToHsl(computedStyles.getPropertyValue("--color-weekday"));
+let cssColorArray_weekdayFaded = hexToHsl(computedStyles.getPropertyValue("--color-weekday-faded"));
+console.log("--color-holiday: ", cssColorArray_holiday);
+// --< calc color theme "true color" - css fixed!>--
+
+// --< calc color theme >--
+cssColorArray_theme = [...cssColorArray_themeTrueColor];
+cssColorArray_theme[2] = cssColorArray_themeTrueColor[2] - 10 > 0 ? cssColorArray_themeTrueColor[2] - 10 : 0;
+root.style.setProperty("--color-theme", `hsl(${cssColorArray_theme[0]}, ${cssColorArray_theme[1]}%, ${cssColorArray_theme[2]}%)`);
+
+// --< calc color theme >--
+cssColorArray_themeHightLight = [...cssColorArray_themeTrueColor];
+cssColorArray_themeHightLight[2] = cssColorArray_themeTrueColor[2] + 10 < 50 ? cssColorArray_themeTrueColor[2] + 10 : 50;
+root.style.setProperty(
+   "--color-theme-hightlight",
+   `hsl(${cssColorArray_theme[0]}, ${cssColorArray_theme[1]}%, ${cssColorArray_theme[2]}%)`,
+);
+
+// --< calc color holiday >--
+cssColorArray_holiday = [...cssColorArray_theme];
+root.style.setProperty(
+   "--color-holiday",
+   `hsl(${cssColorArray_holiday[0]}, ${cssColorArray_holiday[1]}%, ${cssColorArray_holiday[2]}%)`,
+);
+
+//-----------------------------------------------------------------------------------------------
+// --< calc color holiday faded >--
+cssColorArray_holidayFaded = [...cssColorArray_holiday];
+cssColorArray_holidayFaded[2] = cssColorArray_holidayFaded[2] - 25 > 10 ? cssColorArray_holidayFaded[2] - 25 : 10;
+root.style.setProperty(
+   "--color-holiday-faded",
+   `hsl(${cssColorArray_holidayFaded[0]}, ${cssColorArray_holidayFaded[1]}%, ${cssColorArray_holidayFaded[2]}%)`,
+);
+
+// --< calc color weekday = css fixed! >--
+cssColorArray_weekday[0] = 0;
+cssColorArray_weekday[1] = 0;
+root.style.setProperty(
+   "--color-weekday",
+   `hsl(${cssColorArray_weekday[0]}, ${cssColorArray_weekday[1]}%, ${cssColorArray_weekday[2]}%)`,
+);
+
+// --< calc color weekday faded >--
+cssColorArray_weekdayFaded = [...cssColorArray_weekday];
+cssColorArray_weekdayFaded[2] = cssColorArray_weekdayFaded[2] - 25 > 10 ? cssColorArray_weekdayFaded[2] - 25 : 10;
+root.style.setProperty(
+   "--color-weekday-faded",
+   `hsl(${cssColorArray_weekdayFaded[0]}, ${cssColorArray_weekdayFaded[1]}%, ${cssColorArray_weekdayFaded[2]}%)`,
+);
+
+
+*/
+
+koyomiStudioSetting_InputYear.value = todaysDate.getFullYear();
+const koyomiStudioSetting_InputMonth = document.querySelector('[data-js="form-inputMonth"]');
+koyomiStudioSetting_InputMonth.value = todaysDate.getMonth() + 1;
+
+// <-- koyomi studio submit - read settings -
+koyomiStudioForm.addEventListener("submit", (event) => {
+   event.preventDefault();
+
+   selectedYear = event.target.elements.inputYear.value;
+   selectedMonth = event.target.elements.inputStartMonth.value;
+   selectedNrOfMonths = event.target.elements.inputNrOfMonth.value;
+   selectedFirstWeekday = event.target.elements.inputFirstWeekday.value;
+   //calendarColorHEX = event.target.elements.inputColor.value;
+
+   // console.log(calendarColorLHC);
+   //console.log(event.target.elements.inputStartWeekday);
+
+   koyomiStudioContainer.classList.remove("koyomi-studio__container--active");
+   koyomiBuilderContainer.classList.add("koyomi-builder__container--active");
+
+   koyomiStudioTitle.classList.add("koyomi-studio-title--translateY");
+
+   year = selectedYear;
+   currentMonth = selectedMonth - 1; //2 == March
+
+   weekdaynrSunday = (6 - selectedFirstWeekday + 1) % 7;
+   weekdaynrSaturday = (6 - selectedFirstWeekday) % 7;
+
+   numberOfDaysInThisMonth = new Date(year, currentMonth + 1, 0).getDate();
+   numberOfDaysInLastMonth = new Date(year, currentMonth, 0).getDate();
+   endWeekDayLastMonth = new Date(year, currentMonth, 0).getDay();
+   startWeekDayThisMonth = new Date(year, currentMonth, 1).getDay();
+   startWeekDayNextMonth = new Date(year, currentMonth + 1, 1).getDay();
+
+   endWeekDayLastMonth = (endWeekDayLastMonth - selectedFirstWeekday - 1 + 7) % 7;
+   startWeekDayThisMonth = (startWeekDayThisMonth - selectedFirstWeekday - 1 + 7) % 7;
+   startWeekDayNextMonth = (startWeekDayNextMonth - selectedFirstWeekday - 1 + 7) % 7;
+
+   startWeekDayLastMonth = numberOfDaysInLastMonth - (startWeekDayThisMonth - 1);
+   startPanelNextMonth = numberOfDaysInThisMonth + startWeekDayThisMonth;
+
+   // --< color holiday >--
+
+   /*
+   root.style.setProperty(
+      "--color-holiday",
+      `hsl(${cssColorArray_holiday[0]}, ${cssColorArray_holiday[1]}%, ${cssColorArray_holiday[2]}%)`,
+   );
+*/
+   // --< color holiday faded >--
+
+   // start build. . .
+   svgbuilder();
+});
+
+/*
+
+// --< init range slider >--
+inputField_colorHueNumber.value = cssColorArray_themeTrueColor[0];
+inputField_colorHueRange.value = cssColorArray_themeTrueColor[0];
+
+inputField_colorSaturationNumber.value = cssColorArray_themeTrueColor[1];
+inputField_colorSaturationRange.value = cssColorArray_themeTrueColor[1];
+
+inputField_cweekendColorFadeNumber.value = cssColorArray_weekdayFaded[2];
+inputField_weekendColorFadeRange.value = cssColorArray_weekdayFaded[2];
+
+inputField_colorHueRange.addEventListener("input", (event) => {
+   let selectedHue = event.target.value;
+   inputField_colorHueNumber.value = selectedHue;
+
+   // --< color hue >--
+   cssColorArray_themeTrueColor[0] = selectedHue;
+   cssColorArray_holidayFaded[0] = selectedHue;
+   cssColorArray_theme[0] = selectedHue;
+   cssColorArray_themeHightLight[0] = selectedHue;
+
+   root.style.setProperty(
+      "--color-theme-true-color",
+      `hsl(${cssColorArray_themeTrueColor[0]}, ${cssColorArray_themeTrueColor[1]}%, ${cssColorArray_themeTrueColor[2]}%)`,
+   );
+
+   root.style.setProperty(
+      "--color-holiday-faded",
+      `hsl(${cssColorArray_holidayFaded[0]}, ${cssColorArray_holidayFaded[1]}%, ${cssColorArray_holidayFaded[2]}%)`,
+   );
+
+   cssColorArray_theme[1] = cssColorArray_themeTrueColor[1] - 10 > 0 ? cssColorArray_themeTrueColor[1] - 10 : 0;
+   root.style.setProperty(
+      "--color-theme",
+      `hsl(${cssColorArray_theme[0]}, ${cssColorArray_theme[1]}%, ${cssColorArray_theme[2]}%)`,
+   );
+   cssColorArray_themeHightLight[1] = cssColorArray_themeTrueColor[1] + 10 < 50 ? cssColorArray_themeTrueColor[1] + 10 : 50;
+   root.style.setProperty(
+      "--color-theme-hightlight",
+      `hsl(${cssColorArray_themeHightLight[0]}, ${cssColorArray_themeHightLight[1]}%, ${cssColorArray_themeHightLight[2]}%)`,
+   );
+});
+
+inputField_colorHueNumber.addEventListener("input", (event) => {
+   let selectedHue = event.target.value;
+   inputField_colorHueRange.value = selectedHue;
+
+   // --< color hue >--
+   cssColorArray_themeTrueColor[0] = selectedHue;
+   cssColorArray_holidayFaded[0] = selectedHue;
+
+   root.style.setProperty(
+      "--color-theme-true-color",
+      `hsl(${cssColorArray_themeTrueColor[0]}, ${cssColorArray_themeTrueColor[1]}%, ${cssColorArray_themeTrueColor[2]}%)`,
+   );
+   root.style.setProperty(
+      "--color-holiday-faded",
+      `hsl(${cssColorArray_holidayFaded[0]}, ${cssColorArray_holidayFaded[1]}%, ${cssColorArray_holidayFaded[2]}%)`,
+   );
+});
+
+inputField_colorSaturationRange.addEventListener("input", (event) => {
+   let selectedSaturation = event.target.value;
+   inputField_colorSaturationNumber.value = selectedSaturation;
+
+   // --< color fade >--
+   cssColorArray_themeTrueColor[1] = selectedSaturation;
+
+   root.style.setProperty(
+      "--color-theme-true-color",
+      `hsl(${cssColorArray_themeTrueColor[0]}, ${cssColorArray_themeTrueColor[1]}%, ${cssColorArray_themeTrueColor[2]}%)`,
+   );
+});
+
+inputField_colorSaturationNumber.addEventListener("input", (event) => {
+   let selectedSaturation = event.target.value;
+   inputField_colorSaturationRange.value = selectedSaturation;
+
+   // --< color fade >--
+   cssColorArray_themeTrueColor[1] = selectedSaturation;
+
+   root.style.setProperty(
+      "--color-theme-true-color",
+      `hsl(${cssColorArray_themeTrueColor[0]}, ${cssColorArray_themeTrueColor[1]}%, ${cssColorArray_themeTrueColor[2]}%)`,
+   );
+});
+
+inputField_weekendColorFadeRange.addEventListener("input", (event) => {
+   let selectedFade = event.target.value;
+   inputField_cweekendColorFadeNumber.value = selectedFade;
+
+   // --< color fade >--
+   cssColorArray_weekdayFaded[2] = selectedFade;
+   cssColorArray_holidayFaded[2] = selectedFade;
+
+   root.style.setProperty(
+      "--color-weekday-faded",
+      `hsl(${cssColorArray_weekdayFaded[0]}, ${cssColorArray_weekdayFaded[1]}%, ${cssColorArray_weekdayFaded[2]}%)`,
+   );
+   root.style.setProperty(
+      "--color-holiday-faded",
+      `hsl(${cssColorArray_holidayFaded[0]}, ${cssColorArray_holidayFaded[1]}%, ${cssColorArray_holidayFaded[2]}%)`,
+   );
+});
+
+inputField_cweekendColorFadeNumber.addEventListener("input", (event) => {
+   let selectedFade = event.target.value;
+   inputField_weekendColorFadeRange.value = selectedFade;
+
+   // --< color fade >--
+   cssColorArray_weekdayFaded[1] = selectedFade;
+   cssColorArray_holidayFaded[1] = selectedFade;
+
+   root.style.setProperty(
+      "--color-weekday-faded",
+      `hsl(${cssColorArray_weekdayFaded[0]}, ${cssColorArray_weekdayFaded[1]}%, ${cssColorArray_weekdayFaded[2]}%)`,
+   );
+   root.style.setProperty(
+      "--color-holiday-faded",
+      `hsl(${cssColorArray_holidayFaded[0]}, ${cssColorArray_holidayFaded[1]}%, ${cssColorArray_holidayFaded[2]}%)`,
+   );
+});
+
+*/
 
 // <-- koyomi studio submit - read settings -
 // <----------------------------------------------
@@ -259,7 +496,7 @@ function createDayNameArray() {
             (constructTotalDayGridHeightRel + constructDayLabelHeightRel / 2 + constructGapHeightRel) * COORDINATE_SCALE,
       };
 
-      if (h % COLUMNS < 1 || h % COLUMNS == 6) obj.isColored = true;
+      if (h % COLUMNS == weekdaynrSaturday || h % COLUMNS == weekdaynrSunday) obj.isColored = true;
       else obj.isColored = false;
 
       arr.push(obj);
@@ -275,7 +512,8 @@ function createDayNameArray() {
       text.setAttribute("letter-spacing", 2);
       text.setAttribute("dominant-baseline", "middle");
 
-      text.textContent = languages.find((language) => language.lng == "JP")[`weekday_${index}`] + ".";
+      text.textContent =
+         languages.find((language) => language.lng == "DE")[`weekday_${(index - startWeekDayThisMonth - 1 + 7) % 7}`] + ".";
 
       svg.append(text);
    });
@@ -330,24 +568,27 @@ function createDayNumberArray() {
    for (let i = 0; i < 35; i++) {
       if (i < startWeekDayThisMonth) {
          obj = { dayNr: String(startWeekDayLastMonth + i), isFaded: true };
+         console.log("  if ");
       } else if (i < numberOfDaysInThisMonth + startWeekDayThisMonth) {
+         console.log(" else if ");
          obj = { dayNr: String(i - startWeekDayThisMonth + 1).padStart(2, "0"), isFaded: false };
       } else {
+         console.log(" else  ");
          obj = { dayNr: String(i + 1 - startPanelNextMonth).padStart(2, "0"), isFaded: true };
       }
 
       obj.panel = i + 1;
       obj.x = fontOffsetX + dayColumnWidthRel * COORDINATE_SCALE * (i % COLUMNS);
       obj.y = fontOffsetY + fontSize + offsetTop * COORDINATE_SCALE + dayRowHightRel * COORDINATE_SCALE * Math.floor(i / COLUMNS);
-      if (i % COLUMNS < 1 || i % COLUMNS == 6) obj.isColored = true;
+      if (i % COLUMNS == weekdaynrSaturday || i % COLUMNS == weekdaynrSunday) obj.isColored = true;
       else obj.isColored = false;
 
       arr.push(obj);
    }
 
-   arr.forEach((element) => {
+   arr.forEach((element, index) => {
       let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-
+      console.log("index: ", index, "  isFaded: ", element.isFaded);
       text.setAttribute("x", String(element.x));
       text.setAttribute("y", String(element.y));
       text.setAttribute("text-anchor", "left");
@@ -365,6 +606,7 @@ function createLinesArray() {
    const totalWidthPercent = 0.96;
    const arr = [];
    let obj;
+   let line;
 
    // --< calc horizontal day-grid lines >--
    for (let v = 0; v <= ROWS; v++) {
@@ -522,6 +764,7 @@ function createLinesArray() {
       line.setAttribute("y1", String(element.y1));
       line.setAttribute("x2", String(element.x2));
       line.setAttribute("y2", String(element.y2));
+
       //line.setAttribute("stroke", element.sc);
       line.setAttribute("stroke-width", String(element.sw));
       line.classList.add(element.isFaded ? "color-line-weekday-faded" : "color-line-weekday");

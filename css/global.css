@@ -12,18 +12,20 @@
 
 :root {
    --koyomi-builder__vh: 297mm;
-
-   --color-holiday: oklch(61.782% 0.20305 29.357);
-   --color-holiday-faded: oklch(26.707% 0.06804 27.841);
-   --color-weekday: oklch(84.522% 0.0001 271.152);
-   --color-weekday-faded: oklch(31.317% 0.00004 271.152);
+   --color-theme-true-color: #c42929;
+   --color-theme: #ce0f0f;
+   --color-theme-hightlight: hsl(0, 100%, 50%);
+   --color-holiday: var(--color-theme);
+   --color-holiday-faded: #5e0505;
+   --color-weekday: #c0c0c0;
+   --color-weekday-faded: #464646;
 }
 @media print {
    :root {
-      --color-holiday: oklch(61.782% 0.20305 29.357);
-      --color-holiday-faded: oklch(82.346% 0.08912 25.066);
-      --color-weekday: oklch(0% 0 0);
-      --color-weekday-faded: oklch(74.763% 0.00008 271.152);
+      --color-holiday: #e64233;
+      --color-holiday-faded: #faafa8;
+      --color-weekday: #000000;
+      --color-weekday-faded: #727272;
    }
 }
 
@@ -54,7 +56,7 @@ main {
    transform: translateX(-50%) translateY(0);
    min-width: 600px;
 
-   color: #b6b6b6;
+   color: #b4b4b4;
    text-align: center;
    text-overflow: ellipsis;
    white-space: nowrap;

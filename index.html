@@ -5,7 +5,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
       <link rel="stylesheet" href="./css/global.css" />
-      <script src="./js/script.js" defer></script>
+      <script src="./js/script.js" type="module"></script>
       <title>Koyomi Studio</title>
    </head>
    <body class="koyomi-studio-background">
@@ -88,6 +88,7 @@
                               maxlength="2"
                               min="1"
                               max="24"
+                              value="1"
                               placeholder="Nr. of Months"
                            />
                            <span class="japanese-units">か月</span>
@@ -101,36 +102,98 @@
                      </h3>
 
                      <article class="koyomi-studio__input-container">
-                        <label for="form-inputStartMonth" class="koyomi-studio__input-container-section-left"
-                           >Starting Month:</label
+                        <label for="form-inputFirstWeekday" class="koyomi-studio__input-container-section-left"
+                           >First Weekday:</label
                         >
                         <section class="koyomi-studio__input-container-section-right">
-                           <select class="koyomi-studio__input-field" name="" id="">
-                              <option value="0">月曜日</option>
-                              <option value="1">火曜日</option>
-                              <option value="2">水曜日</option>
-                              <option value="3">木曜日</option>
-                              <option value="4">金曜日</option>
-                              <option value="5">土曜日</option>
-                              <option value="6" selected>日曜日</option>
+                           <select class="koyomi-studio__input-field" name="inputFirstWeekday" id="form-inputFirstWeekday">
+                              <option value="1">月曜日</option>
+                              <option value="2">火曜日</option>
+                              <option value="3">水曜日</option>
+                              <option value="4">木曜日</option>
+                              <option value="5">金曜日</option>
+                              <option value="6">土曜日</option>
+                              <option value="0" selected>日曜日</option>
                            </select>
                            <span></span>
                         </section>
                      </article>
 
+                     <!--
+
                      <article class="koyomi-studio__input-container">
-                        <label for="form-inputColor" class="koyomi-studio__input-container-section-left">Calendar Color:</label>
+                        <label for="form-inputColorHue" class="koyomi-studio__input-container-section-left">Color Hue:</label>
                         <section class="koyomi-studio__input-container-section-right">
                            <input
-                              id="form-inputColor"
-                              class="koyomi-studio__input-field"
+                              type="range"
+                              min="0"
+                              max="360"
+                              step="20"
                               name="inputColor"
-                              type="color"
-                              placeholder="Nr. of Months"
+                              id="form-inputColorHue"
+                              class="koyomi-studio__input-range"
+                              data-js="colorHueRange"
                            />
-                           <span class="japanese-units"></span>
+                           <input
+                              type="number"
+                              min="0"
+                              max="360"
+                              name="inputColor"
+                              class="koyomi-studio__input-number"
+                              data-js="colorHueNumber"
+                           />
                         </section>
                      </article>
+
+                     <article class="koyomi-studio__input-container">
+                        <label for="form-inputColorSat" class="koyomi-studio__input-container-section-left"
+                           >Color Saturation:</label
+                        >
+                        <section class="koyomi-studio__input-container-section-right">
+                           <input
+                              type="range"
+                              min="0"
+                              max="100"
+                              name="inputColor"
+                              id="form-inputColorSat"
+                              class="koyomi-studio__input-range"
+                              data-js="colorSatRange"
+                           />
+                           <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              name="inputColor"
+                              class="koyomi-studio__input-number"
+                              data-js="colorSatNumber"
+                           />
+                        </section>
+                     </article>
+
+                     <article class="koyomi-studio__input-container">
+                        <label for="form-inputColorFade" class="koyomi-studio__input-container-section-left"
+                           >Day Overflow Fade:</label
+                        >
+                        <section class="koyomi-studio__input-container-section-right">
+                           <input
+                              type="range"
+                              min="10"
+                              max="50"
+                              name="inputColor"
+                              id="form-inputColorFade"
+                              class="koyomi-studio__input-range koyomi-studio__input-range--holiday-faded"
+                              data-js="colorFadeRange"
+                           />
+                           <input
+                              type="number"
+                              min="10"
+                              max="50"
+                              name="inputColor"
+                              class="koyomi-studio__input-number"
+                              data-js="colorFadeNumber"
+                           />
+                        </section>
+                     </article> -->
 
                      <div class="koyomi-studio__button-containter">
                         <button type="button" class="koyomi-studio__button" data-js="button-start-build">Clear</button>
