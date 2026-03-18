@@ -773,10 +773,31 @@ function createLinesArray(svg) {
 
    arr.forEach((element) => {
       line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-      line.setAttribute("x1", String(element.x1));
-      line.setAttribute("y1", String(element.y1));
-      line.setAttribute("x2", String(element.x2));
-      line.setAttribute("y2", String(element.y2));
+
+      // --< if vertical line:
+      if (element.x1 === element.x2) {
+         line.setAttribute("x1", String(element.x1));
+         line.setAttribute("x2", String(element.x2));
+
+         if (Math.random() < 0.5) {
+            line.setAttribute("y1", String(element.y1));
+            line.setAttribute("y2", String(element.y2));
+         } else {
+            line.setAttribute("y1", String(element.y2));
+            line.setAttribute("y2", String(element.y1));
+         }
+      } else if (element.y1 === element.y2) {
+         line.setAttribute("y1", String(element.y1));
+         line.setAttribute("y2", String(element.y2));
+
+         if (Math.random() < 0.5) {
+            line.setAttribute("x1", String(element.x1));
+            line.setAttribute("x2", String(element.x2));
+         } else {
+            line.setAttribute("x1", String(element.x2));
+            line.setAttribute("x2", String(element.x1));
+         }
+      }
 
       //line.setAttribute("stroke", element.sc);
       line.setAttribute("stroke-width", String(element.sw));
