@@ -12,6 +12,7 @@ const koyomiStudioForm = document.querySelector('[data-js="koyomi-studio_form"]'
 const koyomiStudioContainer = document.querySelector('[data-js="koyomi-studio__container"]');
 const koyomiBuilderContainer = document.querySelector('[data-js="koyomi-builder__container"]');
 const koyomiStudioTitle = document.querySelector('[data-js="title"]');
+const koyomiMainSection = document.querySelector('[data-js="koyomi-main"]');
 
 const koyomiStudioSetting_InputYear = document.querySelector('[data-js="form-inputYear"]');
 
@@ -140,8 +141,6 @@ const dayRowHightRel = constructTotalDayGridHeightRel / 5;
 
 // --< colors >--
 
-const svg = document.querySelector('[data-js="svg"]');
-
 let year = null;
 let currentMonth = null;
 
@@ -236,41 +235,44 @@ koyomiStudioForm.addEventListener("submit", (event) => {
    //console.log(event.target.elements.inputStartWeekday);
 
    koyomiStudioContainer.classList.remove("koyomi-studio__container--active");
-   koyomiBuilderContainer.classList.add("koyomi-builder__container--active");
 
    koyomiStudioTitle.classList.add("koyomi-studio-title--translateY");
 
-   year = selectedYear;
-   currentMonth = selectedMonth - 1; //2 == March
+   for (let monthIndex = 0; monthIndex < selectedNrOfMonths; monthIndex++) {
+      currentMonth = selectedMonth - 1 + monthIndex; //0 == January
 
-   weekdaynrSunday = (6 - selectedFirstWeekday + 1) % 7;
-   weekdaynrSaturday = (6 - selectedFirstWeekday) % 7;
+      year = currentMonth > 11 ? selectedYear + 1 : selectedYear;
 
-   numberOfDaysInThisMonth = new Date(year, currentMonth + 1, 0).getDate();
-   numberOfDaysInLastMonth = new Date(year, currentMonth, 0).getDate();
-   endWeekDayLastMonth = new Date(year, currentMonth, 0).getDay();
-   startWeekDayThisMonth = new Date(year, currentMonth, 1).getDay();
-   startWeekDayNextMonth = new Date(year, currentMonth + 1, 1).getDay();
+      weekdaynrSunday = (6 - selectedFirstWeekday + 1) % 7;
+      weekdaynrSaturday = (6 - selectedFirstWeekday) % 7;
 
-   endWeekDayLastMonth = (endWeekDayLastMonth - selectedFirstWeekday - 1 + 7) % 7;
-   startWeekDayThisMonth = (startWeekDayThisMonth - selectedFirstWeekday - 1 + 7) % 7;
-   startWeekDayNextMonth = (startWeekDayNextMonth - selectedFirstWeekday - 1 + 7) % 7;
+      numberOfDaysInThisMonth = new Date(year, currentMonth + 1, 0).getDate();
+      numberOfDaysInLastMonth = new Date(year, currentMonth, 0).getDate();
+      endWeekDayLastMonth = new Date(year, currentMonth, 0).getDay();
+      startWeekDayThisMonth = new Date(year, currentMonth, 1).getDay();
+      startWeekDayNextMonth = new Date(year, currentMonth + 1, 1).getDay();
 
-   startWeekDayLastMonth = numberOfDaysInLastMonth - (startWeekDayThisMonth - 1);
-   startPanelNextMonth = numberOfDaysInThisMonth + startWeekDayThisMonth;
+      endWeekDayLastMonth = (endWeekDayLastMonth - selectedFirstWeekday - 1 + 7) % 7;
+      startWeekDayThisMonth = (startWeekDayThisMonth - selectedFirstWeekday - 1 + 7) % 7;
+      startWeekDayNextMonth = (startWeekDayNextMonth - selectedFirstWeekday - 1 + 7) % 7;
 
-   // --< color holiday >--
+      startWeekDayLastMonth = numberOfDaysInLastMonth - (startWeekDayThisMonth - 1);
+      startPanelNextMonth = numberOfDaysInThisMonth + startWeekDayThisMonth;
 
-   /*
+      // --< color holiday >--
+
+      /*
    root.style.setProperty(
       "--color-holiday",
       `hsl(${cssColorArray_holiday[0]}, ${cssColorArray_holiday[1]}%, ${cssColorArray_holiday[2]}%)`,
    );
 */
-   // --< color holiday faded >--
+      // --< color holiday faded >--
 
-   // start build. . .
-   svgbuilder();
+      // start build. . .
+
+      svgbuilder(monthIndex);
+   }
 });
 
 /*
@@ -401,7 +403,7 @@ inputField_cweekendColorFadeNumber.addEventListener("input", (event) => {
 
 // <-- koyomi studio submit - read settings -
 // <----------------------------------------------
-function svgbuilder() {
+function svgbuilder(monthIndex) {
    /*
    // holiday
    let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -424,18 +426,38 @@ function svgbuilder() {
 
    svg.append(text);*/
 
-   createFlavorText();
-   createHEaderLine();
-   createMonthHeader();
-   createWeekNumberArray();
-   createDayNameArray();
-   createDayNumberArray();
-   createLinesArray();
+   //const screenWrapper = document.querySelector(`[data-js="screen-wrapper"]`);
+
+   let koyomiBuilderContainer = document.createElement("section");
+   koyomiBuilderContainer.innerHTML = `   
+   <section class="koyomi-builder__container" data-js="koyomi-builder__container">
+      <div class="koyomi-builder__print-sizing">
+         <div class="koyomi-builder__print-margin">
+            <svg viewBox="0 0 1000 1000" preserveAspectRatio="none" data-js="svg${monthIndex}"></svg>
+         </div>
+      </div>
+   </section>
+   `;
+
+   koyomiMainSection.append(koyomiBuilderContainer);
+
+   console.log(koyomiBuilderContainer);
+
+   const svg = document.querySelector(`[data-js="svg${monthIndex}"]`);
+   console.log(svg);
+
+   createFlavorText(svg);
+   createHEaderLine(svg);
+   createMonthHeader(svg);
+   createWeekNumberArray(svg);
+   createDayNameArray(svg);
+   createDayNumberArray(svg);
+   createLinesArray(svg);
 }
 
 // August 2021
 
-function createFlavorText() {
+function createFlavorText(svg) {
    let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
    text.setAttribute("x", "10");
    text.setAttribute("y", "680");
@@ -458,7 +480,7 @@ function createFlavorText() {
    svg.append(text);
 }
 
-function createHEaderLine() {
+function createHEaderLine(svg) {
    let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
    line.setAttribute("x1", "0");
    line.setAttribute("y1", "40");
@@ -470,7 +492,7 @@ function createHEaderLine() {
    svg.append(line);
 }
 
-function createMonthHeader() {
+function createMonthHeader(svg) {
    let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
    text.setAttribute("x", "480");
    text.setAttribute("y", "25");
@@ -482,7 +504,7 @@ function createMonthHeader() {
    svg.append(text);
 }
 
-function createDayNameArray() {
+function createDayNameArray(svg) {
    const arr = [];
    let obj;
    const fontSize = 18;
@@ -512,14 +534,13 @@ function createDayNameArray() {
       text.setAttribute("letter-spacing", 2);
       text.setAttribute("dominant-baseline", "middle");
 
-      text.textContent =
-         languages.find((language) => language.lng == "DE")[`weekday_${(index - startWeekDayThisMonth - 1 + 7) % 7}`] + ".";
+      text.textContent = languages.find((language) => language.lng == "DE")[`weekday_${(index - startWeekDayThisMonth - 1 + 7) % 7}`] + ".";
 
       svg.append(text);
    });
 }
 
-function createWeekNumberArray() {
+function createWeekNumberArray(svg) {
    const arr = [];
    const numberOfFirstWeekThisMonth = (currentMonth - 1) * 4;
    const fontSize = 18;
@@ -527,14 +548,8 @@ function createWeekNumberArray() {
    for (let v = 0; v < ROWS; v++) {
       arr.push({
          panel: v + 1,
-         x:
-            2 +
-            (constructWeekWidthRel * COORDINATE_SCALE) / 2 +
-            (constructTotalDayGridWidthRel + constructGapWidthRel) * COORDINATE_SCALE,
-         y:
-            offsetTop * COORDINATE_SCALE +
-            (constructWeekHeightRel * COORDINATE_SCALE) / 10 +
-            dayRowHightRel * COORDINATE_SCALE * v,
+         x: 2 + (constructWeekWidthRel * COORDINATE_SCALE) / 2 + (constructTotalDayGridWidthRel + constructGapWidthRel) * COORDINATE_SCALE,
+         y: offsetTop * COORDINATE_SCALE + (constructWeekHeightRel * COORDINATE_SCALE) / 10 + dayRowHightRel * COORDINATE_SCALE * v,
          weekNr: numberOfFirstWeekThisMonth + 1 + v,
       });
    }
@@ -557,7 +572,7 @@ function createWeekNumberArray() {
    });
 }
 
-function createDayNumberArray() {
+function createDayNumberArray(svg) {
    const arr = [];
    let obj;
 
@@ -602,7 +617,7 @@ function createDayNumberArray() {
    });
 }
 
-function createLinesArray() {
+function createLinesArray(svg) {
    const totalWidthPercent = 0.96;
    const arr = [];
    let obj;
@@ -626,9 +641,7 @@ function createLinesArray() {
          // --< fade out previous and next month
 
          obj.isFaded =
-            (v == 0 && h < startWeekDayThisMonth) || (v == ROWS && h >= startWeekDayNextMonth && startPanelNextMonth <= 35)
-               ? true
-               : false;
+            (v == 0 && h < startWeekDayThisMonth) || (v == ROWS && h >= startWeekDayNextMonth && startPanelNextMonth <= 35) ? true : false;
          arr.push(obj);
       }
    }

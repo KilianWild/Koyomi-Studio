@@ -28,7 +28,7 @@
                <li></li>
             </ul>
          </section>-->
-         <div class="screen-wrapper">
+         <div class="screen-wrapper" data-js="screen-wrapper">
             <!-- Koyomi Settings -->
             <section class="koyomi-studio__container koyomi-studio__container--active" data-js="koyomi-studio__container">
                <form data-js="koyomi-studio_form">
@@ -56,9 +56,7 @@
                      </article>
 
                      <article class="koyomi-studio__input-container">
-                        <label for="form-inputStartMonth" class="koyomi-studio__input-container-section-left"
-                           >Starting Month:</label
-                        >
+                        <label for="form-inputStartMonth" class="koyomi-studio__input-container-section-left">Starting Month:</label>
                         <section class="koyomi-studio__input-container-section-right">
                            <input
                               id="form-inputStartMonth"
@@ -76,9 +74,7 @@
                      </article>
 
                      <article class="koyomi-studio__input-container">
-                        <label for="form-inputNrOfMonth" class="koyomi-studio__input-container-section-left"
-                           >Number of Months:</label
-                        >
+                        <label for="form-inputNrOfMonth" class="koyomi-studio__input-container-section-left">Number of Months:</label>
                         <section class="koyomi-studio__input-container-section-right">
                            <input
                               id="form-inputNrOfMonth"
@@ -102,9 +98,7 @@
                      </h3>
 
                      <article class="koyomi-studio__input-container">
-                        <label for="form-inputFirstWeekday" class="koyomi-studio__input-container-section-left"
-                           >First Weekday:</label
-                        >
+                        <label for="form-inputFirstWeekday" class="koyomi-studio__input-container-section-left">First Weekday:</label>
                         <section class="koyomi-studio__input-container-section-right">
                            <select class="koyomi-studio__input-field" name="inputFirstWeekday" id="form-inputFirstWeekday">
                               <option value="1">月曜日</option>
@@ -211,12 +205,15 @@
             </section>
 
             <!-- Koyomi Construct -->
-            <section class="koyomi-builder__container" data-js="koyomi-builder__container">
+
+            <section class=".koyomi-builder__month-collection-container" data-js="koyomi-main">
+               <!-- <section class="koyomi-builder__container" data-js="koyomi-builder__container">
                <div class="koyomi-builder__print-sizing">
                   <div class="koyomi-builder__print-margin">
                      <svg viewBox="0 0 1000 1000" preserveAspectRatio="none" data-js="svg"></svg>
                   </div>
                </div>
+            </section>-->
             </section>
          </div>
       </main>
