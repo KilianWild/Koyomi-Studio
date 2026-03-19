@@ -315,11 +315,12 @@ koyomiStudioForm.addEventListener("submit", (event) => {
       startWeekDayNextMonth = new Date(year, currentMonth + 1, 1).getDay();
 
       endWeekDayLastMonth = (endWeekDayLastMonth - selectedFirstWeekday - 1 + 7) % 7;
-      startWeekDayThisMonth = (startWeekDayThisMonth - selectedFirstWeekday - 1 + 7) % 7;
-      startWeekDayNextMonth = (startWeekDayNextMonth - selectedFirstWeekday - 1 + 7) % 7;
+      startWeekDayThisMonth = (startWeekDayThisMonth - selectedFirstWeekday + 7) % 7;
+      startWeekDayNextMonth = (startWeekDayNextMonth - selectedFirstWeekday + 7) % 7;
       startWeekDayLastMonth = numberOfDaysInLastMonth - (startWeekDayThisMonth - 1);
       startPanelNextMonth = numberOfDaysInThisMonth + startWeekDayThisMonth;
 
+      console.log("startWeekDayThisMonth ", startWeekDayThisMonth);
       // --< color holiday >--
 
       /*
