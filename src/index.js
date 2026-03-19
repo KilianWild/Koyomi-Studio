@@ -57,7 +57,7 @@ const languages = [
       year: "Jahr",
       week: "KW",
       month_0: "Januar",
-      month_1: "Februar",q
+      month_1: "Februar",
       month_2: "März",
       month_3: "April",
       month_4: "Mai",
@@ -764,8 +764,6 @@ function svgbuilder(monthIndex, selectedLanguage) {
    return koyomiBuilderContainer;
 }
 
-// August 2021
-
 function createFlavorText(svg, selectedLanguage) {
    let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
    text.setAttribute("x", "10");
@@ -837,7 +835,7 @@ function createDayNameArray(svg, selectedLanguage) {
       arr.push(obj);
    }
 
-   arr.forEach((element, index) => {
+   arrayShuffle(arr).forEach((element, index) => {
       let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
       text.setAttribute("x", String(element.x));
       text.setAttribute("y", String(element.y));
@@ -847,6 +845,12 @@ function createDayNameArray(svg, selectedLanguage) {
       text.setAttribute("letter-spacing", 2);
       text.setAttribute("dominant-baseline", "middle");
       text.setAttribute("data-js", "svg-object");
+      text.style.opacity = 0;
+      text.style.transition = "opacity 1s ease";
+
+      setTimeout(() => {
+         text.style.opacity = 1;
+      }, index * 200);
 
       text.textContent =
          languages.find((language) => language.lng == selectedLanguage)[
@@ -877,7 +881,7 @@ function createWeekNumberArray(svg, selectedLanguage) {
       });
    }
 
-   arr.forEach((element) => {
+   arrayShuffle(arr).forEach((element, index) => {
       let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
 
       text.setAttribute("x", String(element.x));
@@ -889,6 +893,12 @@ function createWeekNumberArray(svg, selectedLanguage) {
       text.setAttribute("transform", `rotate(-90 ${element.x} ${element.y})`);
       text.setAttribute("dominant-baseline", "middle");
       text.setAttribute("data-js", "svg-object");
+      text.style.opacity = 0;
+      text.style.transition = "opacity 1s ease";
+
+      setTimeout(() => {
+         text.style.opacity = 1;
+      }, index * 200);
 
       text.textContent =
          languages.find((language) => language.lng == selectedLanguage).week + " " + String(element.weekNr).padStart(2, "0");
@@ -923,7 +933,7 @@ function createDayNumberArray(svg) {
       arr.push(obj);
    }
 
-   arr.forEach((element, index) => {
+   arrayShuffle(arr).forEach((element, index) => {
       let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
       text.setAttribute("x", String(element.x));
       text.setAttribute("y", String(element.y));
@@ -935,7 +945,13 @@ function createDayNumberArray(svg) {
       text.setAttribute("letter-spacing", 2);
       text.setAttribute("data-js", "svg-object");
       text.textContent = element.dayNr;
+      text.style.opacity = 0;
+      text.style.transition = "opacity 1s ease";
       svg.append(text);
+
+      setTimeout(() => {
+         text.style.opacity = 1;
+      }, index * 35);
    });
 }
 
@@ -1078,17 +1094,17 @@ function createLinesArray(svg) {
    for (let v = 0; v <= 1; v++) {
       // --< horizontal offest
       let xOffset = (constructWeekWidthRel / 1) * COORDINATE_SCALE * v - 0.5; // -1 becasue of  end of div
-      for (let h = 0; h < COLUMNS; h++) {
+      for (let h = 0; h < ROWS; h++) {
          // --< vertical offest
          arr.push({
             id: h,
             x1: constructTotalDayGridWidthRel * COORDINATE_SCALE + constructGapWidthRel * COORDINATE_SCALE + xOffset,
             x2: constructTotalDayGridWidthRel * COORDINATE_SCALE + constructGapWidthRel * COORDINATE_SCALE + xOffset,
-            y1: offsetTop * COORDINATE_SCALE + (constructWeekHeightRel / 7) * COORDINATE_SCALE * h,
+            y1: offsetTop * COORDINATE_SCALE + (constructWeekHeightRel / ROWS) * COORDINATE_SCALE * h,
             y2:
                offsetTop * COORDINATE_SCALE +
-               (constructWeekHeightRel / 7) * COORDINATE_SCALE * h +
-               (constructWeekHeightRel / 7) * COORDINATE_SCALE,
+               (constructWeekHeightRel / ROWS) * COORDINATE_SCALE * h +
+               (constructWeekHeightRel / ROWS) * COORDINATE_SCALE,
             sc: "red",
             sw: 0.5,
          });
