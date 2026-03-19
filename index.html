@@ -4,8 +4,8 @@
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-      <link rel="stylesheet" href="./css/global.css" />
-      <script src="./js/script.js" type="module"></script>
+      <link rel="stylesheet" href="./src/css/global.css" />
+      <script src="./src/index.js" type="module"></script>
       <title>Koyomi Studio</title>
    </head>
    <body class="koyomi-studio-background">
@@ -112,6 +112,31 @@
                            <span></span>
                         </section>
                      </article>
+                     <!--
+                     <article class="koyomi-studio__input-container">
+                        <label for="form-inputPaperSize" class="koyomi-studio__input-container-section-left">Paper Size:</label>
+                        <section class="koyomi-studio__input-container-section-right">
+                           <select class="koyomi-studio__input-field" name="inputPaperSize" id="form-inputPaperSize">
+                              <option value="A5">A5</option>
+                              <option value="A4" selected>A4</option>
+                              <option value="A3">A3</option>
+                           </select>
+                           <span></span>
+                        </section>
+                     </article>
+                     -->
+
+                     <article class="koyomi-studio__input-container">
+                        <label for="form-inputLanguage" class="koyomi-studio__input-container-section-left">Language:</label>
+                        <section class="koyomi-studio__input-container-section-right">
+                           <select class="koyomi-studio__input-field" name="inputLanguage" id="form-inputLanguage">
+                              <option value="DE">Deutsch</option>
+                              <option value="EN">English</option>
+                              <option value="JP" selected>日本語</option>
+                           </select>
+                           <span></span>
+                        </section>
+                     </article>
 
                      <!--
 
@@ -214,6 +239,18 @@
                   </div>
                </div>
             </section>-->
+            </section>
+
+            <section class="koyomi-builder__bottom-buttons" data-js="buttom-buttons">
+               <div class="koyomi-builder__button-containter">
+                  <button type="button" class="koyomi-studio__button" data-js="button-start-back">Back</button>
+                  <button type="button" class="koyomi-studio__button koyomi-studio__button--position-right" data-js="button-print-pdf">
+                     PDF
+                  </button>
+                  <button type="button" class="koyomi-studio__button koyomi-studio__button--position-right" data-js="button-print-pdf">
+                     Print
+                  </button>
+               </div>
             </section>
          </div>
       </main>

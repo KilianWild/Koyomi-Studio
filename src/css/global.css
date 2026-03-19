@@ -5,8 +5,15 @@
 
 @font-face {
    font-family: "GeoSansLight";
-   src: url("../../fonts/GeosansLight.ttf") format("truetype");
+   src: url("../../public/fonts/GeosansLight.ttf") format("truetype");
    font-weight: normal;
+   font-style: normal;
+}
+
+@font-face {
+   font-family: "Montserrat";
+   src: url("../../public/fonts/montserrat/Montserrat-Light.woff2") format("woff2");
+   font-weight: 300;
    font-style: normal;
 }
 
@@ -19,6 +26,9 @@
    --color-holiday-faded: #5e0505;
    --color-weekday: #c0c0c0;
    --color-weekday-faded: #464646;
+
+   --page-size-height: 0mm;
+   --page-size-width: 0mm;
 }
 @media print {
    :root {
@@ -69,6 +79,10 @@ main {
 .screen-wrapper {
    position: relative;
    height: 100%;
+   display: flex;
+   justify-content: center;
+   flex-direction: column;
+   align-items: center;
 }
 
 .font-poppin {

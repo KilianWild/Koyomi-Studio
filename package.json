@@ -1,5 +1,18 @@
 {
-  "dependencies": {
-    "hex-to-hsl": "^1.0.2"
-  }
+   "dependencies": {
+      "@pdfme/common": "^5.5.9",
+      "@pdfme/generator": "^5.5.9",
+      "dom-to-image": "^2.6.0",
+      "hex-to-hsl": "^1.0.2",
+      "jspdf": "^4.2.1",
+      "svg2pdf.js": "^2.7.0"
+   },
+   "devDependencies": {
+      "vite": "^8.0.0"
+   },
+   "scripts": {
+      "dev": "vite",
+      "build": "vite build",
+      "preview": "vite preview"
+   }
 }

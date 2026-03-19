@@ -1,19 +1,17 @@
 @font-face {
    font-family: "GeoSansLight";
-   src: url("../../fonts/GeosansLight.ttf") format("truetype");
+   src: url("../../public/fonts/GeosansLight.ttf") format("truetype");
    font-weight: normal;
    font-style: normal;
 }
 
-/*
-         <section class="koyomi-builder__body koyomi-builder__body--hidden" data-js="koyomi-builder__container">
-            <article class="koyomi-builder-main">
-               <div class="print-wrap">
-                  <div class="koyomi-build">
-                     <div class="print-margin">
-                        <svg viewBox="0 0 1000 1000" data-js="svg"></svg>
-                     </div>
-                     */
+@font-face {
+   font-family: "Montserrat";
+   src: url("../../public/fonts/montserrat/Montserrat-Light.woff2") format("woff2");
+   font-weight: 300;
+   font-style: normal;
+}
+
 .koyomi-builder__month-collection-container {
    position: absolute;
    top: 0;
@@ -47,7 +45,6 @@
 .koyomi-builder__print-sizing {
    position: relative;
 
-   top: 10vh;
    width: 80vw;
 
    max-width: 297mm; /*A4*/
@@ -56,26 +53,27 @@
    aspect-ratio: 1.4142 / 1;
 
    border-radius: 10px;
-   border: 2px dashed rgb(110, 42, 42);
+   border: 1px dashed rgb(110, 42, 42);
 
-   font-family: GeoSansLight, sans-serif;
-   margin-bottom: 4%;
+   font-family: "GeoSansLight", sans-serif;
+   /*margin-bottom: 4%;*/
+} /*
+.koyomi-builder__print-sizing--for-browser {
+   border-radius: 10px;
+   border: 1px dashed rgb(110, 42, 42);
 }
-
-.koyomi-builder__print-margin {
-   position: absolute;
-   inset: 3%;
-}
-
-svg text {
-   font-family: GeoSansLight, sans-serif;
+*/
+.dom-to-img-container {
+   width: 100%;
+   height: 100%;
 }
 
 @media print {
    .koyomi-builder__print-sizing {
       top: 0;
-      width: 297mm !important;
-      height: 210mm !important;
+
+      width: var(--page-size-width) !important;
+      height: var(--page-size-height) !important;
       margin: 0 !important;
       border: none !important;
       page-break-inside: avoid;
@@ -86,11 +84,20 @@ svg text {
       margin: 0;
       border: none;
    }
+}
 
-   @page {
-      size: A4 landscape;
-      margin: 0;
-   }
+@page {
+   size: A4 landscape;
+   margin: 0;
+}
+
+.koyomi-builder__print-margin {
+   position: absolute;
+   inset: 2mm;
+}
+
+svg text {
+   font-family: "GeoSansLight", sans-serif;
 }
 
 .color-line-holiday {
@@ -126,4 +133,39 @@ svg text {
    to {
       stroke-dashoffset: 0;
    }
+}
+
+.koyomi-builder__bottom-buttons {
+   position: absolute;
+   bottom: 100px;
+   margin-left: 0;
+   margin-right: 0;
+   display: flex;
+   flex-direction: column;
+   width: 600px;
+   height: 50px;
+
+   opacity: 0;
+   display: none;
+   /*background-color: rgb(30, 30, 30);
+
+   border: 1.5px solid var(--color-theme);
+   border-radius: 10px;*/
+   /*box-shadow: 0px 10px 30px 0px rgb(102, 36, 56);*/
+}
+.koyomi-builder__bottom-buttons--active {
+   opacity: 1;
+   display: block;
+}
+@media print {
+   .koyomi-builder__bottom-buttons--active {
+      opacity: 0;
+   }
+}
+.koyomi-builder__button-containter {
+   align-self: center;
+   width: 90%;
+   display: flex;
+   justify-content: flex-start;
+   margin-top: 20px;
 }
