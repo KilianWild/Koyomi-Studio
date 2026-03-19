@@ -17,6 +17,7 @@ const koyomiStudioTitle = document.querySelector('[data-js="title"]');
 const koyomiBuilderMainSection = document.querySelector('[data-js="koyomi-main"]');
 
 const koyomiBuilderButtons = document.querySelector('[data-js="buttom-buttons"]');
+const koyomiBuilderButton_Save = document.querySelector('[data-js="button-save-pdf"]');
 const koyomiBuilderButton_Print = document.querySelector('[data-js="button-print-pdf"]');
 const koyomiBuilderButton_Back = document.querySelector('[data-js="button-back"]');
 
@@ -56,7 +57,7 @@ const languages = [
       year: "Jahr",
       week: "KW",
       month_0: "Januar",
-      month_1: "Februar",
+      month_1: "Februar",q
       month_2: "März",
       month_3: "April",
       month_4: "Mai",
@@ -274,7 +275,6 @@ koyomiStudioForm.addEventListener("submit", (event) => {
    koyomiStudioTitle.classList.add("koyomi-studio-title--translateY");
 
    koyomiBuilderButtons.classList.add("koyomi-builder__bottom-buttons--active");
-   const koyomiBuilderButton_Back = document.querySelector('[data-js="button-back"]');
 
    // --< set page size
    switch (selectedPageSize) {
@@ -335,6 +335,7 @@ koyomiStudioForm.addEventListener("submit", (event) => {
       koyomiBuilderContainerArray.push(svgbuilder(monthIndex, selectedLanguage));
 
       koyomiBuilderButton_Print.removeAttribute("disabled");
+      koyomiBuilderButton_Save.removeAttribute("disabled");
       koyomiBuilderButton_Back.removeAttribute("disabled");
    }
 });
@@ -353,10 +354,126 @@ koyomiBuilderButton_Back.addEventListener("click", async () => {
    });
 
    koyomiBuilderButton_Print.setAttribute("disabled", "");
+   koyomiBuilderButton_Save.setAttribute("disabled", "");
    koyomiBuilderButton_Back.setAttribute("disabled", "");
 });
 
 koyomiBuilderButton_Print.addEventListener("click", async () => {
+   //domToImgElement.classList.remove("koyomi-builder__print-sizing--for-browser");
+   koyomiBuilderMainSection.classList.remove("koyomi-builder__month-collection-container--active");
+   const loaders = document.querySelectorAll('[data-js="koyomi-loader"]');
+   const pages = document.querySelectorAll('[data-js="dom-to-img-container"]');
+   const spanLoadedPages = document.querySelector('[data-js="koyomi-loader-page-x"]');
+   const spanpagesToLoad = document.querySelector('[data-js="koyomi-loader-page-of-x"]');
+   const loaderText = document.querySelector('[data-js="koyomi-loader-text"]');
+
+   spanpagesToLoad.textContent = pages.length;
+
+   loaders.forEach((loader) => {
+      loader.classList.add("visible");
+   });
+   loaderText.classList.add("visible");
+
+   allButtons.forEach((button) => {
+      button.setAttribute("disabled", "");
+   });
+
+   await new Promise((resolve) => setTimeout(resolve, 1000));
+
+   const svgObjects = document.querySelectorAll('[data-js="svg-object"]');
+   svgObjects.forEach((svgObject) => {
+      svgObject.classList.add("print-version");
+   });
+
+   const doc = new jsPDF({
+      orientation: "landscape",
+      unit: "mm",
+      format: "a4",
+   });
+
+   const scale = 3;
+
+   for (let i = 0; i < pages.length; i++) {
+      spanLoadedPages.textContent = i + 1;
+      try {
+         const dataUrl = await domtoimage.toPng(pages[i], {
+            width: pages[i].offsetWidth * scale,
+            height: pages[i].offsetHeight * scale,
+            style: {
+               transform: `scale(${scale})`,
+               transformOrigin: "top left",
+            },
+         });
+
+         const pdfWidth = 297;
+         const pdfHeight = 210;
+
+         const img = await loadImage(dataUrl);
+
+         if (i > 0) doc.addPage();
+
+         doc.addImage(img, "PNG", 0, 0, pdfWidth, pdfHeight, undefined, "FAST");
+      } catch (error) {
+         console.error("error creating pdf page!!", error);
+      }
+   }
+
+   // Convert PDF to Blob
+   const blob = doc.output("blob");
+   const url = URL.createObjectURL(blob);
+
+   try {
+      // Open a new window
+      const printWindow = window.open("", "_blank");
+
+      // Add the PDF inside an iframe
+      printWindow.document.write(`
+  <html>
+    <head>
+      <title>Print PDF</title>
+    </head>
+    <body style="margin:0">
+      <iframe src="${url}" style="width:100%;height:100%;" frameborder="0"></iframe>
+      <script>
+        const iframe = document.querySelector('iframe');
+        iframe.onload = () => {
+          iframe.contentWindow.focus();
+          iframe.contentWindow.print();
+        };
+      </script>
+    </body>
+  </html>
+`);
+      printWindow.document.close();
+   } catch (error) {
+      console.error("error opening tab, disable adblocker or enable allow tab redirection", error);
+   }
+
+   allButtons.forEach((button) => {
+      button.removeAttribute("disabled");
+   });
+   svgObjects.forEach((svgObject) => {
+      svgObject.classList.remove("print-version");
+   });
+   loaders.forEach((loader) => {
+      loader.classList.remove("visible");
+   });
+   loaderText.classList.remove("visible");
+   koyomiBuilderMainSection.classList.add("koyomi-builder__month-collection-container--active");
+
+   spanLoadedPages.textContent = 0;
+
+   function loadImage(src) {
+      return new Promise((resolve, reject) => {
+         const img = new Image();
+         img.src = src;
+         img.onload = () => resolve(img);
+         img.onerror = reject;
+      });
+   }
+});
+
+koyomiBuilderButton_Save.addEventListener("click", async () => {
    //domToImgElement.classList.remove("koyomi-builder__print-sizing--for-browser");
    koyomiBuilderMainSection.classList.remove("koyomi-builder__month-collection-container--active");
    const loaders = document.querySelectorAll('[data-js="koyomi-loader"]');
