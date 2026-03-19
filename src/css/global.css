@@ -19,24 +19,25 @@
 
 :root {
    --koyomi-builder__vh: 297mm;
-   --color-theme-true-color: #c42929;
-   --color-theme: #ce0f0f;
-   --color-theme-hightlight: hsl(0, 100%, 50%);
+   --color-theme-true-color: rgb(196, 41, 41);
+   --color-theme: rgb(199, 61, 61);
+   --color-theme-hightlight: var(--color-theme);
    --color-holiday: var(--color-theme);
-   --color-holiday-faded: #5e0505;
-   --color-weekday: #c0c0c0;
-   --color-weekday-faded: #464646;
+   --color-holiday-faded: rgb(199, 61, 61, 0.4);
+   --color-weekday: rgb(192, 192, 192);
+   --color-weekday-faded: rgb(192, 192, 192, 0.3);
+
+   --color-theme-print: rgb(233, 60, 60);
+   --color-theme-hightlight-print: var(--color-theme-print);
+   --color-holiday-print: var(--color-theme-print);
+   --color-holiday-faded-print: rgba(233, 60, 60, 0.2);
+   --color-weekday-print: rgb(0, 0, 0);
+   --color-weekday-faded-print: rgb(0, 0, 0, 0.2);
 
    --page-size-height: 0mm;
    --page-size-width: 0mm;
-}
-@media print {
-   :root {
-      --color-holiday: #e64233;
-      --color-holiday-faded: #faafa8;
-      --color-weekday: #000000;
-      --color-weekday-faded: #727272;
-   }
+
+   --print-margin: 5mm;
 }
 
 *,
@@ -61,10 +62,11 @@ main {
 }
 
 .title {
-   position: absolute;
+   position: fixed;
    left: 50%;
    transform: translateX(-50%) translateY(0);
    min-width: 600px;
+   padding: 10px;
 
    color: #b4b4b4;
    text-align: center;
@@ -74,6 +76,9 @@ main {
 
    text-shadow: 3px 3px 4px rgba(0, 0, 0, 0.986);
    transition: transform 1s ease;
+   background-color: rgb(30, 30, 30);
+   z-index: 100;
+   border-radius: 10px;
 }
 
 .screen-wrapper {
@@ -83,6 +88,7 @@ main {
    justify-content: center;
    flex-direction: column;
    align-items: center;
+   text-align: center;
 }
 
 .font-poppin {
@@ -98,6 +104,12 @@ main {
    font-family: "GeoSansLight", sans-serif;
    letter-spacing: 3px;
 }
+.font-geosans-small {
+   font-family: "GeoSansLight", sans-serif;
+   letter-spacing: 3px;
+   font-size: medium;
+}
+
 .japanese-units {
    position: relative;
    font-size: 18px;

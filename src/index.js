@@ -7,20 +7,22 @@ import domtoimage from "dom-to-image";
 let selectedYear = 0;
 let selectedMonth = 0;
 let selectedNrOfMonths = 0;
+let selectedPrintMargin = 0;
 
 const root = document.documentElement;
 
 const koyomiStudioForm = document.querySelector('[data-js="koyomi-studio_form"]');
 const koyomiStudioContainer = document.querySelector('[data-js="koyomi-studio__container"]');
-const koyomiBuilderContainer = document.querySelector('[data-js="koyomi-builder__container"]');
 const koyomiStudioTitle = document.querySelector('[data-js="title"]');
-const koyomiMainSection = document.querySelector('[data-js="koyomi-main"]');
+const koyomiBuilderMainSection = document.querySelector('[data-js="koyomi-main"]');
 
 const koyomiBuilderButtons = document.querySelector('[data-js="buttom-buttons"]');
 const koyomiBuilderButton_Print = document.querySelector('[data-js="button-print-pdf"]');
 const koyomiBuilderButton_Back = document.querySelector('[data-js="button-back"]');
 
 const koyomiStudioSetting_InputYear = document.querySelector('[data-js="form-inputYear"]');
+
+const allButtons = document.querySelectorAll("button");
 
 const todaysDate = new Date();
 
@@ -45,6 +47,8 @@ let weekdaynrSaturday;
 let calendarColorHEX;
 let calendarColorLHCArray = [];
 let calendarColorLHCArrayDarker = [];
+
+let koyomiBuilderContainerArray = [];
 
 const languages = [
    {
@@ -162,6 +166,8 @@ const dayRowHightRel = constructTotalDayGridHeightRel / 5;
 let year = null;
 let currentMonth = null;
 
+let lockUserInteraction = false;
+
 /*
 
 const inputField_colorHueNumber = document.querySelector('[data-js="colorHueNumber"]');
@@ -247,6 +253,7 @@ koyomiStudioForm.addEventListener("submit", (event) => {
    selectedMonth = event.target.elements.inputStartMonth.value;
    selectedNrOfMonths = event.target.elements.inputNrOfMonth.value;
    selectedFirstWeekday = event.target.elements.inputFirstWeekday.value;
+   selectedPrintMargin = event.target.elements.inputPrintMargin.value;
 
    selectedPageSize = "A4"; // event.target.elements.inputPaperSize.value;
    const selectedLanguage = event.target.elements.inputLanguage.value;
@@ -288,7 +295,10 @@ koyomiStudioForm.addEventListener("submit", (event) => {
    const computedStyles = getComputedStyle(root);
    let a = computedStyles.getPropertyValue("--page-size-height");
    let b = computedStyles.getPropertyValue("--page-size-width");
-   console.log("selectedPageSize", selectedPageSize, " width: ", b, " height: ", a);
+
+   root.style.setProperty("--print-margin", selectedPrintMargin + "mm");
+
+   koyomiBuilderMainSection.classList.add("koyomi-builder__month-collection-container--active");
 
    for (let monthIndex = 0; monthIndex < selectedNrOfMonths; monthIndex++) {
       currentMonth = selectedMonth - 1 + monthIndex; //0 == January
@@ -307,7 +317,6 @@ koyomiStudioForm.addEventListener("submit", (event) => {
       endWeekDayLastMonth = (endWeekDayLastMonth - selectedFirstWeekday - 1 + 7) % 7;
       startWeekDayThisMonth = (startWeekDayThisMonth - selectedFirstWeekday - 1 + 7) % 7;
       startWeekDayNextMonth = (startWeekDayNextMonth - selectedFirstWeekday - 1 + 7) % 7;
-
       startWeekDayLastMonth = numberOfDaysInLastMonth - (startWeekDayThisMonth - 1);
       startPanelNextMonth = numberOfDaysInThisMonth + startWeekDayThisMonth;
 
@@ -323,48 +332,116 @@ koyomiStudioForm.addEventListener("submit", (event) => {
 
       // start build. . .
 
-      svgbuilder(monthIndex, selectedLanguage);
+      koyomiBuilderContainerArray.push(svgbuilder(monthIndex, selectedLanguage));
+
+      koyomiBuilderButton_Print.removeAttribute("disabled");
+      koyomiBuilderButton_Back.removeAttribute("disabled");
    }
 });
 
-koyomiBuilderButton_Print.addEventListener("click", async () => {
-   const domToImgElement = document.querySelector('[data-js="dom-to-img-container"]');
-   //domToImgElement.classList.remove("koyomi-builder__print-sizing--for-browser");
+koyomiBuilderButton_Back.addEventListener("click", async () => {
+   koyomiStudioContainer.classList.add("koyomi-studio__container--active");
+   koyomiStudioTitle.classList.remove("koyomi-studio-title--translateY");
 
-   console.log(domToImgElement);
-   domtoimage
-      .toPng(domToImgElement, {
-         width: domToImgElement.offsetWidth * 2,
-         height: domToImgElement.offsetHeight * 2,
-         style: {
-            transform: "scale(2)",
-            transformOrigin: "top left",
-         },
-      })
-      .then((dataUrl) => {
-         // dataUrl is already a PNG base64, no need to use canvas.toDataURL()
-         const doc = new jsPDF({
-            orientation: "landscape",
-            unit: "mm",
-            format: "a4", // or selectedPageSize if you have it
+   koyomiBuilderButtons.classList.remove("koyomi-builder__bottom-buttons--active");
+   koyomiBuilderMainSection.classList.remove("koyomi-builder__month-collection-container--active");
+
+   await new Promise((resolve) => setTimeout(resolve, 1000));
+
+   koyomiBuilderContainerArray.forEach((koyomiBuilderContainer) => {
+      koyomiBuilderContainer.remove();
+   });
+
+   koyomiBuilderButton_Print.setAttribute("disabled", "");
+   koyomiBuilderButton_Back.setAttribute("disabled", "");
+});
+
+koyomiBuilderButton_Print.addEventListener("click", async () => {
+   //domToImgElement.classList.remove("koyomi-builder__print-sizing--for-browser");
+   koyomiBuilderMainSection.classList.remove("koyomi-builder__month-collection-container--active");
+   const loaders = document.querySelectorAll('[data-js="koyomi-loader"]');
+   const pages = document.querySelectorAll('[data-js="dom-to-img-container"]');
+   const spanLoadedPages = document.querySelector('[data-js="koyomi-loader-page-x"]');
+   const spanpagesToLoad = document.querySelector('[data-js="koyomi-loader-page-of-x"]');
+   const loaderText = document.querySelector('[data-js="koyomi-loader-text"]');
+
+   spanpagesToLoad.textContent = pages.length;
+
+   loaders.forEach((loader) => {
+      loader.classList.add("visible");
+   });
+   loaderText.classList.add("visible");
+
+   allButtons.forEach((button) => {
+      button.setAttribute("disabled", "");
+   });
+
+   await new Promise((resolve) => setTimeout(resolve, 1000));
+
+   const svgObjects = document.querySelectorAll('[data-js="svg-object"]');
+   svgObjects.forEach((svgObject) => {
+      svgObject.classList.add("print-version");
+   });
+
+   const doc = new jsPDF({
+      orientation: "landscape",
+      unit: "mm",
+      format: "a4",
+   });
+
+   const scale = 3;
+
+   for (let i = 0; i < pages.length; i++) {
+      spanLoadedPages.textContent = i + 1;
+      try {
+         const dataUrl = await domtoimage.toPng(pages[i], {
+            width: pages[i].offsetWidth * scale,
+            height: pages[i].offsetHeight * scale,
+            style: {
+               transform: `scale(${scale})`,
+               transformOrigin: "top left",
+            },
          });
 
-         // Convert canvas size to PDF size (optional, scales to A4 landscape)
-         const pdfWidth = 297; // A4 landscape width in mm
-         const pdfHeight = 210; // A4 landscape height in mm
+         const pdfWidth = 297;
+         const pdfHeight = 210;
 
-         // If you want to maintain aspect ratio dynamically:
+         const img = await loadImage(dataUrl);
+
+         if (i > 0) doc.addPage();
+
+         doc.addImage(img, "PNG", 0, 0, pdfWidth, pdfHeight, undefined, "FAST");
+      } catch (error) {
+         console.error("error creating pdf page!!", error);
+      }
+   }
+
+   doc.save(
+      `Koyomi-${selectedYear}-${
+         languages.find((language) => language.lng == "EN")[`month_${selectedMonth}`]
+      }_${selectedNrOfMonths == 12 ? "One-Year" : selectedNrOfMonths > 1 ? selectedNrOfMonths + "-Months" : "1-Month"}.pdf`,
+   );
+
+   allButtons.forEach((button) => {
+      button.removeAttribute("disabled");
+   });
+   svgObjects.forEach((svgObject) => {
+      svgObject.classList.remove("print-version");
+   });
+   loaders.forEach((loader) => {
+      loader.classList.remove("visible");
+   });
+   loaderText.classList.remove("visible");
+   koyomiBuilderMainSection.classList.add("koyomi-builder__month-collection-container--active");
+
+   function loadImage(src) {
+      return new Promise((resolve, reject) => {
          const img = new Image();
-         img.src = dataUrl;
-         img.onload = () => {
-            doc.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight, undefined, "FAST");
-            doc.save("output.pdf");
-         };
-         // domToImgElement.classList.add("koyomi-builder__print-sizing--for-browser");
-      })
-      .catch((err) => {
-         console.error("dom-to-image error", err);
+         img.src = src;
+         img.onload = () => resolve(img);
+         img.onerror = reject;
       });
+   }
 });
 
 /*
@@ -555,7 +632,7 @@ function svgbuilder(monthIndex, selectedLanguage) {
    </section>
    `;
 
-   koyomiMainSection.append(koyomiBuilderContainer);
+   koyomiBuilderMainSection.append(koyomiBuilderContainer);
 
    const svg = document.querySelector(`[data-js="svg${monthIndex}"]`);
 
@@ -566,12 +643,13 @@ function svgbuilder(monthIndex, selectedLanguage) {
    createDayNameArray(svg, selectedLanguage);
    createDayNumberArray(svg);
    createLinesArray(svg);
+
+   return koyomiBuilderContainer;
 }
 
 // August 2021
 
 function createFlavorText(svg, selectedLanguage) {
-   console.log("selectedLanguage", selectedLanguage);
    let text = document.createElementNS("http://www.w3.org/2000/svg", "text");
    text.setAttribute("x", "10");
    text.setAttribute("y", "680");
@@ -579,6 +657,7 @@ function createFlavorText(svg, selectedLanguage) {
    text.classList.add("color-text-weekday");
    text.setAttribute("font-size", "16");
    text.setAttribute("letter-spacing", 4);
+   text.setAttribute("data-js", "svg-object");
    text.textContent = "カレンダー";
 
    svg.append(text);
@@ -589,6 +668,7 @@ function createFlavorText(svg, selectedLanguage) {
    text.classList.add("color-text-weekday");
    text.setAttribute("font-size", "16");
    text.setAttribute("letter-spacing", 4);
+   text.setAttribute("data-js", "svg-object");
    text.textContent = languages.find((language) => language.lng == selectedLanguage).year + " " + year;
 
    svg.append(text);
@@ -602,6 +682,7 @@ function createHEaderLine(svg) {
    line.setAttribute("y2", "40");
    line.classList.add("color-line-weekday");
    line.setAttribute("stroke-width", "0.5");
+   line.setAttribute("data-js", "svg-object");
 
    svg.append(line);
 }
@@ -614,6 +695,7 @@ function createMonthHeader(svg, selectedLanguage) {
    text.classList.add("color-text-weekday");
    text.setAttribute("font-size", "30");
    text.setAttribute("letter-spacing", 7);
+   text.setAttribute("data-js", "svg-object");
    text.textContent = languages.find((language) => language.lng == selectedLanguage)[`month_${currentMonth}`];
    svg.append(text);
 }
@@ -647,9 +729,12 @@ function createDayNameArray(svg, selectedLanguage) {
       text.setAttribute("font-size", String(fontSize));
       text.setAttribute("letter-spacing", 2);
       text.setAttribute("dominant-baseline", "middle");
+      text.setAttribute("data-js", "svg-object");
 
       text.textContent =
-         languages.find((language) => language.lng == selectedLanguage)[`weekday_${(index - startWeekDayThisMonth - 1 + 7) % 7}`] + ".";
+         languages.find((language) => language.lng == selectedLanguage)[
+            `weekday_${(index - startWeekDayThisMonth - 1 + 7) % 7}`
+         ] + ".";
 
       svg.append(text);
    });
@@ -663,8 +748,14 @@ function createWeekNumberArray(svg, selectedLanguage) {
    for (let v = 0; v < ROWS; v++) {
       arr.push({
          panel: v + 1,
-         x: 2 + (constructWeekWidthRel * COORDINATE_SCALE) / 2 + (constructTotalDayGridWidthRel + constructGapWidthRel) * COORDINATE_SCALE,
-         y: offsetTop * COORDINATE_SCALE + (constructWeekHeightRel * COORDINATE_SCALE) / 10 + dayRowHightRel * COORDINATE_SCALE * v,
+         x:
+            2 +
+            (constructWeekWidthRel * COORDINATE_SCALE) / 2 +
+            (constructTotalDayGridWidthRel + constructGapWidthRel) * COORDINATE_SCALE,
+         y:
+            offsetTop * COORDINATE_SCALE +
+            (constructWeekHeightRel * COORDINATE_SCALE) / 10 +
+            dayRowHightRel * COORDINATE_SCALE * v,
          weekNr: numberOfFirstWeekThisMonth + 1 + v,
       });
    }
@@ -680,6 +771,7 @@ function createWeekNumberArray(svg, selectedLanguage) {
       text.setAttribute("letter-spacing", 2);
       text.setAttribute("transform", `rotate(-90 ${element.x} ${element.y})`);
       text.setAttribute("dominant-baseline", "middle");
+      text.setAttribute("data-js", "svg-object");
 
       text.textContent =
          languages.find((language) => language.lng == selectedLanguage).week + " " + String(element.weekNr).padStart(2, "0");
@@ -692,9 +784,9 @@ function createDayNumberArray(svg) {
    const arr = [];
    let obj;
 
-   const fontSize = 30;
+   const fontSize = 34;
    const fontOffsetX = 10;
-   const fontOffsetY = 20;
+   const fontOffsetY = 6;
 
    for (let i = 0; i < 35; i++) {
       if (i < startWeekDayThisMonth) {
@@ -722,8 +814,9 @@ function createDayNumberArray(svg) {
       text.classList.add(
          `color-text-${element.isColored ? `holiday${element.isFaded ? "-faded" : ""}` : `weekday${element.isFaded ? "-faded" : ""}`}`,
       );
-      text.setAttribute("font-size", "40");
+      text.setAttribute("font-size", String(fontSize));
       text.setAttribute("letter-spacing", 2);
+      text.setAttribute("data-js", "svg-object");
       text.textContent = element.dayNr;
       svg.append(text);
    });
@@ -753,7 +846,9 @@ function createLinesArray(svg) {
          // --< fade out previous and next month
 
          obj.isFaded =
-            (v == 0 && h < startWeekDayThisMonth) || (v == ROWS && h >= startWeekDayNextMonth && startPanelNextMonth <= 35) ? true : false;
+            (v == 0 && h < startWeekDayThisMonth) || (v == ROWS && h >= startWeekDayNextMonth && startPanelNextMonth <= 35)
+               ? true
+               : false;
          arr.push(obj);
       }
    }
@@ -914,6 +1009,7 @@ function createLinesArray(svg) {
       //line.setAttribute("stroke", element.sc);
       line.setAttribute("stroke-width", String(element.sw));
       line.classList.add(element.isFaded ? "color-line-weekday-faded" : "color-line-weekday");
+      line.setAttribute("data-js", "svg-object");
 
       svg.append(line);
 

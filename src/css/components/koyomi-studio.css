@@ -18,7 +18,7 @@
 
 .koyomi-studio__container {
    padding-top: 10vh;
-   position: absolute;
+   position: fixed;
    display: flex;
    height: 100%;
    width: 100%;
@@ -28,6 +28,7 @@
    color: rgb(221, 221, 221);
 
    opacity: 0;
+   transition: opacity 0.5s ease-in-out;
    pointer-events: none;
 }
 @media print {

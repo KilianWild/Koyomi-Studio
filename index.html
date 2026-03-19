@@ -10,7 +10,9 @@
    </head>
    <body class="koyomi-studio-background">
       <main>
-         <h1 class="title" data-js="title"><span class="font-geosans">Koyomi Studio</span> - カレンダー作成ツール</h1>
+         <h1 class="title" data-js="title">
+            <span class="font-geosans">Koyomi Studio</span> - カレンダー作成ツール<span class="font-geosans-small"> v1.0</span>
+         </h1>
          <!-- Koyomi Background Effects 
          <section class="background-effect">
             <ul class="floating-bubbles-effect">
@@ -56,7 +58,9 @@
                      </article>
 
                      <article class="koyomi-studio__input-container">
-                        <label for="form-inputStartMonth" class="koyomi-studio__input-container-section-left">Starting Month:</label>
+                        <label for="form-inputStartMonth" class="koyomi-studio__input-container-section-left"
+                           >Starting Month:</label
+                        >
                         <section class="koyomi-studio__input-container-section-right">
                            <input
                               id="form-inputStartMonth"
@@ -74,7 +78,9 @@
                      </article>
 
                      <article class="koyomi-studio__input-container">
-                        <label for="form-inputNrOfMonth" class="koyomi-studio__input-container-section-left">Number of Months:</label>
+                        <label for="form-inputNrOfMonth" class="koyomi-studio__input-container-section-left"
+                           >Number of Months:</label
+                        >
                         <section class="koyomi-studio__input-container-section-right">
                            <input
                               id="form-inputNrOfMonth"
@@ -83,7 +89,7 @@
                               type="number"
                               maxlength="2"
                               min="1"
-                              max="24"
+                              max="12"
                               value="1"
                               placeholder="Nr. of Months"
                            />
@@ -98,7 +104,9 @@
                      </h3>
 
                      <article class="koyomi-studio__input-container">
-                        <label for="form-inputFirstWeekday" class="koyomi-studio__input-container-section-left">First Weekday:</label>
+                        <label for="form-inputFirstWeekday" class="koyomi-studio__input-container-section-left"
+                           >First Weekday:</label
+                        >
                         <section class="koyomi-studio__input-container-section-right">
                            <select class="koyomi-studio__input-field" name="inputFirstWeekday" id="form-inputFirstWeekday">
                               <option value="1">月曜日</option>
@@ -135,6 +143,26 @@
                               <option value="JP" selected>日本語</option>
                            </select>
                            <span></span>
+                        </section>
+                     </article>
+
+                     <article class="koyomi-studio__input-container">
+                        <label for="form-inputPrintMargin" class="koyomi-studio__input-container-section-left"
+                           >Print Margin:</label
+                        >
+                        <section class="koyomi-studio__input-container-section-right">
+                           <input
+                              id="form-inputPrintMargin"
+                              class="koyomi-studio__input-field"
+                              name="inputPrintMargin"
+                              type="number"
+                              maxlength="2"
+                              min="0"
+                              max="20"
+                              value="5"
+                              data-js="form-inputMonth"
+                           />
+                           <span class="font-geosans-small-nospace">mm</span>
                         </section>
                      </article>
 
@@ -230,8 +258,7 @@
             </section>
 
             <!-- Koyomi Construct -->
-
-            <section class=".koyomi-builder__month-collection-container" data-js="koyomi-main">
+            <section class="koyomi-builder__month-collection-container" data-js="koyomi-main">
                <!-- <section class="koyomi-builder__container" data-js="koyomi-builder__container">
                <div class="koyomi-builder__print-sizing">
                   <div class="koyomi-builder__print-margin">
@@ -241,15 +268,33 @@
             </section>-->
             </section>
 
+            <div class="koyomi-builder-loader" data-js="koyomi-loader"></div>
+            <div class="koyomi-builder-loader-inner" data-js="koyomi-loader"></div>
+            <section class="koyomi-builder-loader__text-container" data-js="koyomi-loader-text">
+               <p class="koyomi-builder-loader__text font-geosans-small">generating</p>
+               <p class="koyomi-builder-loader__text font-geosans-small">
+                  page <span data-js="koyomi-loader-page-x">0</span> of
+                  <span data-js="koyomi-loader-page-of-x">0</span>
+               </p>
+            </section>
             <section class="koyomi-builder__bottom-buttons" data-js="buttom-buttons">
                <div class="koyomi-builder__button-containter">
-                  <button type="button" class="koyomi-studio__button" data-js="button-start-back">Back</button>
-                  <button type="button" class="koyomi-studio__button koyomi-studio__button--position-right" data-js="button-print-pdf">
-                     PDF
+                  <button type="button" class="koyomi-studio__button" data-js="button-back" disabled>Back</button>
+                  <button
+                     type="button"
+                     class="koyomi-studio__button koyomi-studio__button--position-right"
+                     data-js="button-print-pdf"
+                     disabled
+                  >
+                     Save as PDF
                   </button>
-                  <button type="button" class="koyomi-studio__button koyomi-studio__button--position-right" data-js="button-print-pdf">
-                     Print
-                  </button>
+                  <!--   <button
+                     type="button"
+                     class="koyomi-studio__button koyomi-studio__button--position-right"
+                     data-js="button-print-pdf"
+                  >
+                     Print from PDF
+                  </button>-->
                </div>
             </section>
          </div>
