@@ -218,8 +218,8 @@ svg text {
    margin-bottom: auto;
    width: 320px;
    aspect-ratio: 1;
-   padding: 2px; /* the border thickness */
-   background: #e05151; /* the color */
+   padding: 1px;
+   background: #e05151;
 
    aspect-ratio: 1;
    border-radius: 50%;
@@ -249,8 +249,8 @@ svg text {
    margin-bottom: auto;
    width: 290px;
    aspect-ratio: 1;
-   padding: 1px; /* the border thickness */
-   background: #e05151; /* the color */
+   padding: 0.5px;
+   background: #e05151;
 
    aspect-ratio: 1;
    border-radius: 50%;

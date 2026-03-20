@@ -730,7 +730,67 @@ inputField_cweekendColorFadeNumber.addEventListener("input", (event) => {
    );
 });
 
+
+
+
+
 */
+
+//--< Buttons Effect
+//-------------------------------------------------------------------------------
+
+const button = document.querySelector('[data-js="button-start-build"]');
+const buttonLineEffect = button.querySelector('[data-js="button-effect-lines"]');
+
+allButtons.forEach((button) => {
+   document.querySelectorAll(".button-svg-lines line").forEach((line) => {
+      const length = line.getTotalLength();
+      line.style.strokeDasharray = length;
+      line.style.strokeDashoffset = length;
+   });
+
+   let animationTimeouts = [];
+
+   button.addEventListener("mouseenter", (event) => {
+      animationTimeouts.forEach((t) => clearTimeout(t));
+      animationTimeouts = [];
+
+      const buttonLineEffect = event.target.querySelector('[data-js="button-effect-lines"]');
+      console.log("buttonLineEffect: ", buttonLineEffect);
+
+      buttonLineEffect.querySelectorAll("line").forEach((line, index) => {
+         console.log("line: ", line);
+         const length = line.getTotalLength();
+         line.style.strokeDasharray = length;
+         line.style.strokeDashoffset = length;
+
+         if (index == 1 || index == 3) {
+            const timeout = setTimeout(() => {
+               line.style.animation = "drawLine 0.1s linear forwards";
+            }, 100);
+            animationTimeouts.push(timeout);
+         } else {
+            line.style.animation = "drawLine 0.1s linear forwards";
+         }
+      });
+   });
+
+   button.addEventListener("mouseleave", (event) => {
+      animationTimeouts.forEach((t) => clearTimeout(t));
+      animationTimeouts = [];
+      const buttonLineEffect = event.target.querySelector('[data-js="button-effect-lines"]');
+      buttonLineEffect.querySelectorAll("line").forEach((line) => {
+         line.style.animation = "none";
+         line.style.strokeDashoffset = line.getTotalLength();
+      });
+   });
+});
+
+document.querySelectorAll(".button-svg-lines line").forEach((line) => {
+   const length = line.getTotalLength();
+   line.style.strokeDasharray = length;
+   line.style.strokeDashoffset = length;
+});
 
 // <-- koyomi studio submit - read settings -
 // <----------------------------------------------
@@ -1198,27 +1258,8 @@ function arrayShuffle(arr) {
 // This script is released to the public domain and may be used, modified and
 // distributed without restrictions. Attribution not necessary but appreciated.
 // Source: https://weeknumber.com/how-to/javascript
-/*
-// Returns the ISO week of the date.
-Date.prototype.getWeek = function () {
-   const date = new Date(this.getTime());
-   date.setHours(0, 0, 0, 0);
-   console.log("getWeek - date:", date);
 
-   // Shift to Thursday in current week (ISO standard)
-   const day = (date.getDay() + 6) % 7; // Mon=0, Sun=6
-   console.log("getWeek - day:", day);
-   date.setDate(date.getDate() + 3 - day);
-   console.log("getWeek - date.setDate:", date);
-   // Week 1 is Jan 4
-   const week1 = new Date(date.getFullYear(), 0, 4);
-   console.log("getWeek - week1:", week1);
-   // Count full weeks between week1 and the target Thursday
-   const weekNo = Math.ceil(((date - week1) / 86400000 + 1) / 7);
-   console.log("getWeek - weekNo:", weekNo);
-   return weekNo;
-};
-*/
+// Returns the ISO week of the date.
 
 Date.prototype.getWeek = function () {
    const date = new Date(this.getTime());

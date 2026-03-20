@@ -203,10 +203,20 @@
    color: var(--color-theme);
    padding: 20px;
 
+   position: relative;
+   display: flex;
+   align-items: center; /* vertical centering for text/content */
+   justify-content: center; /* optional */
+   padding: 10px 40px; /* gives the button height */
+
    font-family: "GeoSansLight", sans-serif;
    letter-spacing: 3px;
    font-weight: bold;
    font-size: 1.2rem;
+
+   /*
+   display: flex;
+   justify-content: center; /* horizontal center */
 }
 
 .koyomi-studio__button--position-right {
