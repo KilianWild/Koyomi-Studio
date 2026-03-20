@@ -140,34 +140,37 @@ const languages = [
    },
 ];
 
-// --< offsets>--
+//--<  offsets>--
 const offsetTop = 0.05;
 
-// --< day-grid >--
+//--<  day-grid >--
 const constructTotalDayGridWidthRel = 0.96; //0.96;
 const constructTotalDayGridHeightRel = 0.56;
 
-// --< daylabel-grid >--
+//--<  daylabel-grid >--
 const constructDayLabelWidthRel = constructTotalDayGridWidthRel;
 const constructDayLabelHeightRel = 0.03;
 
-// --< week-grid >--
+//--<  week-grid >--
 const constructWeekWidthRel = 0.03;
 const constructWeekHeightRel = constructTotalDayGridHeightRel;
 
-// --< grid-gap >--
+//--<  grid-gap >--
 const constructGapWidthRel = 0.01;
 const constructGapHeightRel = constructGapWidthRel;
 
 const dayColumnWidthRel = constructTotalDayGridWidthRel / 7;
 const dayRowHightRel = constructTotalDayGridHeightRel / 5;
 
-// --< colors >--
+//--<  colors >--
 
-let year = null;
+let currentYear = null;
 let currentMonth = null;
 
 let lockUserInteraction = false;
+
+let selectedFirstWeekdayISO = 0;
+let startWeekdayOfThisYearISO = 0;
 
 /*
 
@@ -191,14 +194,14 @@ let cssColorArray_holiday = hexToHsl(computedStyles.getPropertyValue("--color-ho
 let cssColorArray_holidayFaded = hexToHsl(computedStyles.getPropertyValue("--color-holiday-faded"));
 let cssColorArray_weekday = hexToHsl(computedStyles.getPropertyValue("--color-weekday"));
 let cssColorArray_weekdayFaded = hexToHsl(computedStyles.getPropertyValue("--color-weekday-faded"));
-// --< calc color theme "true color" - css fixed!>--
+//--<  calc color theme "true color" - css fixed!>--
 
-// --< calc color theme >--
+//--<  calc color theme >--
 cssColorArray_theme = [...cssColorArray_themeTrueColor];
 cssColorArray_theme[2] = cssColorArray_themeTrueColor[2] - 10 > 0 ? cssColorArray_themeTrueColor[2] - 10 : 0;
 root.style.setProperty("--color-theme", `hsl(${cssColorArray_theme[0]}, ${cssColorArray_theme[1]}%, ${cssColorArray_theme[2]}%)`);
 
-// --< calc color theme >--
+//--<  calc color theme >--
 cssColorArray_themeHightLight = [...cssColorArray_themeTrueColor];
 cssColorArray_themeHightLight[2] = cssColorArray_themeTrueColor[2] + 10 < 50 ? cssColorArray_themeTrueColor[2] + 10 : 50;
 root.style.setProperty(
@@ -206,7 +209,7 @@ root.style.setProperty(
    `hsl(${cssColorArray_theme[0]}, ${cssColorArray_theme[1]}%, ${cssColorArray_theme[2]}%)`,
 );
 
-// --< calc color holiday >--
+//--<  calc color holiday >--
 cssColorArray_holiday = [...cssColorArray_theme];
 root.style.setProperty(
    "--color-holiday",
@@ -214,7 +217,7 @@ root.style.setProperty(
 );
 
 //-----------------------------------------------------------------------------------------------
-// --< calc color holiday faded >--
+//--<  calc color holiday faded >--
 cssColorArray_holidayFaded = [...cssColorArray_holiday];
 cssColorArray_holidayFaded[2] = cssColorArray_holidayFaded[2] - 25 > 10 ? cssColorArray_holidayFaded[2] - 25 : 10;
 root.style.setProperty(
@@ -222,7 +225,7 @@ root.style.setProperty(
    `hsl(${cssColorArray_holidayFaded[0]}, ${cssColorArray_holidayFaded[1]}%, ${cssColorArray_holidayFaded[2]}%)`,
 );
 
-// --< calc color weekday = css fixed! >--
+//--<  calc color weekday = css fixed! >--
 cssColorArray_weekday[0] = 0;
 cssColorArray_weekday[1] = 0;
 root.style.setProperty(
@@ -230,7 +233,7 @@ root.style.setProperty(
    `hsl(${cssColorArray_weekday[0]}, ${cssColorArray_weekday[1]}%, ${cssColorArray_weekday[2]}%)`,
 );
 
-// --< calc color weekday faded >--
+//--<  calc color weekday faded >--
 cssColorArray_weekdayFaded = [...cssColorArray_weekday];
 cssColorArray_weekdayFaded[2] = cssColorArray_weekdayFaded[2] - 25 > 10 ? cssColorArray_weekdayFaded[2] - 25 : 10;
 root.style.setProperty(
@@ -240,13 +243,16 @@ root.style.setProperty(
 
 
 */
+let jan4GridPosition = 0;
+let firstRowOfYearIsWeekOne = 0;
+let weekNrOfLastWeekOfLastYear = 0;
 
 koyomiStudioSetting_InputYear.value = todaysDate.getFullYear();
 const koyomiStudioSetting_InputMonth = document.querySelector('[data-js="form-inputMonth"]');
 koyomiStudioSetting_InputMonth.value = todaysDate.getMonth() + 1;
 let selectedPageSize = "";
 
-// <-- koyomi studio submit - read settings -
+//--< koyomi studio submit - read settings -
 koyomiStudioForm.addEventListener("submit", (event) => {
    event.preventDefault();
 
@@ -272,11 +278,9 @@ koyomiStudioForm.addEventListener("submit", (event) => {
 */
 
    koyomiStudioContainer.classList.remove("koyomi-studio__container--active");
-   koyomiStudioTitle.classList.add("koyomi-studio-title--translateY");
-
    koyomiBuilderButtons.classList.add("koyomi-builder__bottom-buttons--active");
 
-   // --< set page size
+   //--<  set page size
    switch (selectedPageSize) {
       case "A5":
          root.style.setProperty("--page-size-height", "148mm");
@@ -301,27 +305,47 @@ koyomiStudioForm.addEventListener("submit", (event) => {
    koyomiBuilderMainSection.classList.add("koyomi-builder__month-collection-container--active");
 
    for (let monthIndex = 0; monthIndex < selectedNrOfMonths; monthIndex++) {
-      currentMonth = selectedMonth - 1 + monthIndex; //0 == January
+      firstRowOfYearIsWeekOne = false;
+      currentMonth = (selectedMonth - 1 + monthIndex) % 12; //--< 0 == January
 
-      year = currentMonth > 11 ? selectedYear + 1 : selectedYear;
+      currentYear = selectedMonth - 1 + monthIndex > 11 ? Number(selectedYear) + 1 : selectedYear;
 
       weekdaynrSunday = (6 - selectedFirstWeekday + 1) % 7;
       weekdaynrSaturday = (6 - selectedFirstWeekday) % 7;
 
-      numberOfDaysInThisMonth = new Date(year, currentMonth + 1, 0).getDate();
-      numberOfDaysInLastMonth = new Date(year, currentMonth, 0).getDate();
-      endWeekDayLastMonth = new Date(year, currentMonth, 0).getDay();
-      startWeekDayThisMonth = new Date(year, currentMonth, 1).getDay();
-      startWeekDayNextMonth = new Date(year, currentMonth + 1, 1).getDay();
+      numberOfDaysInThisMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      numberOfDaysInLastMonth = new Date(currentYear, currentMonth, 0).getDate();
+      endWeekDayLastMonth = new Date(currentYear, currentMonth, 0).getDay();
+      startWeekDayThisMonth = new Date(currentYear, currentMonth, 1).getDay();
+      startWeekDayNextMonth = new Date(currentYear, currentMonth + 1, 1).getDay();
+
+      startWeekdayOfThisYearISO = new Date(currentYear, 0, 4).getDay();
+      startWeekdayOfThisYearISO = (startWeekdayOfThisYearISO - 1 + 7) % 7;
+      selectedFirstWeekdayISO = (selectedFirstWeekday - 1 + 7) % 7; //--< ISO: Mo = 0 and Su = 6
 
       endWeekDayLastMonth = (endWeekDayLastMonth - selectedFirstWeekday - 1 + 7) % 7;
       startWeekDayThisMonth = (startWeekDayThisMonth - selectedFirstWeekday + 7) % 7;
       startWeekDayNextMonth = (startWeekDayNextMonth - selectedFirstWeekday + 7) % 7;
       startWeekDayLastMonth = numberOfDaysInLastMonth - (startWeekDayThisMonth - 1);
       startPanelNextMonth = numberOfDaysInThisMonth + startWeekDayThisMonth;
+      weekNrOfLastWeekOfLastYear = new Date(currentYear - 1, 11, 28).getWeek(); //--< ISO: Dec 28. will always be the last week of the year in ISO.
 
-      console.log("startWeekDayThisMonth ", startWeekDayThisMonth);
-      // --< color holiday >--
+      console.log("---------------------");
+      console.log("startWeekDayThisMonth: ", startWeekDayThisMonth);
+      console.log("selectedFirstWeekdayISO: ", selectedFirstWeekdayISO);
+      console.log("numberOfDaysInThisMonth + startWeekDayThisMonth: ", numberOfDaysInThisMonth + startWeekDayThisMonth);
+      console.log("startWeekdayOfThisYearISO: ", startWeekdayOfThisYearISO, " ISO");
+
+      jan4GridPosition = startWeekDayThisMonth + 3;
+      console.log("jan4GridPosition: ", jan4GridPosition);
+      console.log("weekNrOfLastWeekOfLastYear: ", weekNrOfLastWeekOfLastYear);
+
+      //--< check if first row of week is week one. If not add one week to the calendar;
+      if (jan4GridPosition < 7) firstRowOfYearIsWeekOne = true;
+
+      console.log("firstRowOfYearIsWeekOne: ", firstRowOfYearIsWeekOne);
+
+      //--<  color holiday >--
 
       /*
    root.style.setProperty(
@@ -329,16 +353,15 @@ koyomiStudioForm.addEventListener("submit", (event) => {
       `hsl(${cssColorArray_holiday[0]}, ${cssColorArray_holiday[1]}%, ${cssColorArray_holiday[2]}%)`,
    );
 */
-      // --< color holiday faded >--
+      //--<  color holiday faded >--
 
       // start build. . .
 
       koyomiBuilderContainerArray.push(svgbuilder(monthIndex, selectedLanguage));
-
-      koyomiBuilderButton_Print.removeAttribute("disabled");
-      koyomiBuilderButton_Save.removeAttribute("disabled");
-      koyomiBuilderButton_Back.removeAttribute("disabled");
    }
+   koyomiBuilderButton_Print.removeAttribute("disabled");
+   koyomiBuilderButton_Save.removeAttribute("disabled");
+   koyomiBuilderButton_Back.removeAttribute("disabled");
 });
 
 koyomiBuilderButton_Back.addEventListener("click", async () => {
@@ -392,7 +415,7 @@ koyomiBuilderButton_Print.addEventListener("click", async () => {
       format: "a4",
    });
 
-   const scale = 3;
+   const scale = 6;
 
    for (let i = 0; i < pages.length; i++) {
       spanLoadedPages.textContent = i + 1;
@@ -419,15 +442,14 @@ koyomiBuilderButton_Print.addEventListener("click", async () => {
       }
    }
 
-   // Convert PDF to Blob
+   //--< Convert PDF to Blob
    const blob = doc.output("blob");
    const url = URL.createObjectURL(blob);
 
    try {
-      // Open a new window
       const printWindow = window.open("", "_blank");
 
-      // Add the PDF inside an iframe
+      //--< Add the PDF inside an iframe
       printWindow.document.write(`
   <html>
     <head>
@@ -586,7 +608,7 @@ koyomiBuilderButton_Save.addEventListener("click", async () => {
 
 /*
 
-// --< init range slider >--
+//--<  init range slider >--
 inputField_colorHueNumber.value = cssColorArray_themeTrueColor[0];
 inputField_colorHueRange.value = cssColorArray_themeTrueColor[0];
 
@@ -600,7 +622,7 @@ inputField_colorHueRange.addEventListener("input", (event) => {
    let selectedHue = event.target.value;
    inputField_colorHueNumber.value = selectedHue;
 
-   // --< color hue >--
+   //--<  color hue >--
    cssColorArray_themeTrueColor[0] = selectedHue;
    cssColorArray_holidayFaded[0] = selectedHue;
    cssColorArray_theme[0] = selectedHue;
@@ -632,7 +654,7 @@ inputField_colorHueNumber.addEventListener("input", (event) => {
    let selectedHue = event.target.value;
    inputField_colorHueRange.value = selectedHue;
 
-   // --< color hue >--
+   //--<  color hue >--
    cssColorArray_themeTrueColor[0] = selectedHue;
    cssColorArray_holidayFaded[0] = selectedHue;
 
@@ -650,7 +672,7 @@ inputField_colorSaturationRange.addEventListener("input", (event) => {
    let selectedSaturation = event.target.value;
    inputField_colorSaturationNumber.value = selectedSaturation;
 
-   // --< color fade >--
+   //--<  color fade >--
    cssColorArray_themeTrueColor[1] = selectedSaturation;
 
    root.style.setProperty(
@@ -663,7 +685,7 @@ inputField_colorSaturationNumber.addEventListener("input", (event) => {
    let selectedSaturation = event.target.value;
    inputField_colorSaturationRange.value = selectedSaturation;
 
-   // --< color fade >--
+   //--<  color fade >--
    cssColorArray_themeTrueColor[1] = selectedSaturation;
 
    root.style.setProperty(
@@ -676,7 +698,7 @@ inputField_weekendColorFadeRange.addEventListener("input", (event) => {
    let selectedFade = event.target.value;
    inputField_cweekendColorFadeNumber.value = selectedFade;
 
-   // --< color fade >--
+   //--<  color fade >--
    cssColorArray_weekdayFaded[2] = selectedFade;
    cssColorArray_holidayFaded[2] = selectedFade;
 
@@ -694,7 +716,7 @@ inputField_cweekendColorFadeNumber.addEventListener("input", (event) => {
    let selectedFade = event.target.value;
    inputField_weekendColorFadeRange.value = selectedFade;
 
-   // --< color fade >--
+   //--<  color fade >--
    cssColorArray_weekdayFaded[1] = selectedFade;
    cssColorArray_holidayFaded[1] = selectedFade;
 
@@ -775,8 +797,8 @@ function createFlavorText(svg, selectedLanguage) {
    text.setAttribute("letter-spacing", 4);
    text.setAttribute("data-js", "svg-object");
    text.textContent = "カレンダー";
-
    svg.append(text);
+
    text = document.createElementNS("http://www.w3.org/2000/svg", "text");
    text.setAttribute("x", "990");
    text.setAttribute("y", "680");
@@ -785,7 +807,7 @@ function createFlavorText(svg, selectedLanguage) {
    text.setAttribute("font-size", "16");
    text.setAttribute("letter-spacing", 4);
    text.setAttribute("data-js", "svg-object");
-   text.textContent = languages.find((language) => language.lng == selectedLanguage).year + " " + year;
+   text.textContent = languages.find((language) => language.lng == selectedLanguage).year + " " + currentYear;
 
    svg.append(text);
 }
@@ -864,7 +886,11 @@ function createDayNameArray(svg, selectedLanguage) {
 
 function createWeekNumberArray(svg, selectedLanguage) {
    const arr = [];
-   const numberOfFirstWeekThisMonth = (currentMonth - 1) * 4;
+   const thisDate = new Date(currentYear, currentMonth, 4);
+   let numberOfFirstWeekThisMonth = thisDate.getWeek();
+
+   if (!firstRowOfYearIsWeekOne) numberOfFirstWeekThisMonth--;
+
    const fontSize = 18;
 
    for (let v = 0; v < ROWS; v++) {
@@ -878,7 +904,8 @@ function createWeekNumberArray(svg, selectedLanguage) {
             offsetTop * COORDINATE_SCALE +
             (constructWeekHeightRel * COORDINATE_SCALE) / 10 +
             dayRowHightRel * COORDINATE_SCALE * v,
-         weekNr: numberOfFirstWeekThisMonth + 1 + v,
+         weekNr:
+            !firstRowOfYearIsWeekOne && v == 0 && currentMonth == 0 ? weekNrOfLastWeekOfLastYear : numberOfFirstWeekThisMonth + v,
       });
    }
 
@@ -962,12 +989,12 @@ function createLinesArray(svg) {
    let obj;
    let line;
 
-   // --< calc horizontal day-grid lines >--
+   //--<  calc horizontal day-grid lines >--
    for (let v = 0; v <= ROWS; v++) {
-      // --< vertical offest
+      //--<  vertical offest
       let yOffset = dayRowHightRel * COORDINATE_SCALE * v;
       for (let h = 0; h < COLUMNS; h++) {
-         // --< horizontal offest
+         //--<  horizontal offest
          obj = {
             id: h,
             x1: dayColumnWidthRel * COORDINATE_SCALE * h,
@@ -977,7 +1004,7 @@ function createLinesArray(svg) {
             sw: 0.5,
          };
 
-         // --< fade out previous and next month
+         //--<  fade out previous and next month
 
          obj.isFaded =
             (v == 0 && h < startWeekDayThisMonth) || (v == ROWS && h >= startWeekDayNextMonth && startPanelNextMonth <= 35)
@@ -987,12 +1014,12 @@ function createLinesArray(svg) {
       }
    }
 
-   // --< calc vertical day-grid lines >--
+   //--<  calc vertical day-grid lines >--
    for (let h = 0; h <= COLUMNS; h++) {
-      // --< horizontal offest
+      //--<  horizontal offest
       let xOffset = dayColumnWidthRel * COORDINATE_SCALE * h;
       for (let v = 0; v < ROWS; v++) {
-         // --< vertical offest
+         //--<  vertical offest
          obj = {
             id: v,
             x1: xOffset,
@@ -1002,7 +1029,7 @@ function createLinesArray(svg) {
             sc: "red",
             sw: 0.5,
          };
-         // --< fade out previous and next month
+         //--<  fade out previous and next month
          obj.isFaded =
             (v == 0 && h < startWeekDayThisMonth) ||
             (v == ROWS - 1 && (h > startWeekDayNextMonth || startWeekDayNextMonth == 0) && startPanelNextMonth <= 35)
@@ -1013,12 +1040,12 @@ function createLinesArray(svg) {
       }
    }
 
-   // --< calc horizontal daylable-grid lines >--
+   //--<  calc horizontal daylable-grid lines >--
    for (let v = 0; v <= 1; v++) {
-      // --< vertical offest
+      //--<  vertical offest
       let yOffset = (constructDayLabelHeightRel / 1) * COORDINATE_SCALE * v;
       for (let h = 0; h < COLUMNS; h++) {
-         // --< horizontal offest
+         //--<  horizontal offest
          arr.push({
             id: h,
             x1: dayColumnWidthRel * COORDINATE_SCALE * h,
@@ -1039,12 +1066,12 @@ function createLinesArray(svg) {
       }
    }
 
-   // --< calc vertical day-grid lines >--
+   //--<  calc vertical day-grid lines >--
    for (let h = 0; h <= COLUMNS; h++) {
-      // --< horizontal offest
+      //--<  horizontal offest
       let xOffset = dayColumnWidthRel * COORDINATE_SCALE * h;
       for (let v = 0; v < 1; v++) {
-         // --< vertical offest
+         //--<  vertical offest
          arr.push({
             id: v,
             x1: xOffset,
@@ -1066,12 +1093,12 @@ function createLinesArray(svg) {
       }
    }
 
-   // --< calc horizontal week-grid lines >--
+   //--<  calc horizontal week-grid lines >--
    for (let v = 0; v <= ROWS; v++) {
-      // --< vertical offest
+      //--<  vertical offest
       let yOffset = (constructWeekHeightRel / 5) * COORDINATE_SCALE * v;
       for (let h = 0; h < 1; h++) {
-         // --< horizontal offest
+         //--<  horizontal offest
          arr.push({
             id: h,
             x1:
@@ -1091,12 +1118,12 @@ function createLinesArray(svg) {
       }
    }
 
-   // --< calc vertical week-grid lines >--
+   //--<  calc vertical week-grid lines >--
    for (let v = 0; v <= 1; v++) {
-      // --< horizontal offest
+      //--<  horizontal offest
       let xOffset = (constructWeekWidthRel / 1) * COORDINATE_SCALE * v - 0.5; // -1 becasue of  end of div
       for (let h = 0; h < ROWS; h++) {
-         // --< vertical offest
+         //--<  vertical offest
          arr.push({
             id: h,
             x1: constructTotalDayGridWidthRel * COORDINATE_SCALE + constructGapWidthRel * COORDINATE_SCALE + xOffset,
@@ -1115,7 +1142,7 @@ function createLinesArray(svg) {
    arr.forEach((element) => {
       line = document.createElementNS("http://www.w3.org/2000/svg", "line");
 
-      // --< if vertical line:
+      //--<  if vertical line:
       if (element.x1 === element.x2) {
          line.setAttribute("x1", String(element.x1));
          line.setAttribute("x2", String(element.x2));
@@ -1166,4 +1193,59 @@ function arrayShuffle(arr) {
       [a[i], a[j]] = [a[j], a[i]];
    }
    return a;
+}
+
+// This script is released to the public domain and may be used, modified and
+// distributed without restrictions. Attribution not necessary but appreciated.
+// Source: https://weeknumber.com/how-to/javascript
+/*
+// Returns the ISO week of the date.
+Date.prototype.getWeek = function () {
+   const date = new Date(this.getTime());
+   date.setHours(0, 0, 0, 0);
+   console.log("getWeek - date:", date);
+
+   // Shift to Thursday in current week (ISO standard)
+   const day = (date.getDay() + 6) % 7; // Mon=0, Sun=6
+   console.log("getWeek - day:", day);
+   date.setDate(date.getDate() + 3 - day);
+   console.log("getWeek - date.setDate:", date);
+   // Week 1 is Jan 4
+   const week1 = new Date(date.getFullYear(), 0, 4);
+   console.log("getWeek - week1:", week1);
+   // Count full weeks between week1 and the target Thursday
+   const weekNo = Math.ceil(((date - week1) / 86400000 + 1) / 7);
+   console.log("getWeek - weekNo:", weekNo);
+   return weekNo;
+};
+*/
+
+Date.prototype.getWeek = function () {
+   const date = new Date(this.getTime());
+   date.setHours(0, 0, 0, 0);
+
+   const day = (date.getDay() + 6) % 7;
+   date.setDate(date.getDate() + 3 - day);
+
+   const week1 = new Date(date.getFullYear(), 0, 4);
+
+   // 🔧 FIX: shift week1 to Thursday too
+   const week1Day = (week1.getDay() + 6) % 7;
+   week1.setDate(week1.getDate() + 3 - week1Day);
+
+   const weekNo = Math.ceil(((date - week1) / 86400000 + 1) / 7);
+
+   return weekNo;
+};
+// Returns the four-digit year corresponding to the ISO week of the date.
+Date.prototype.getWeekYear = function () {
+   var date = new Date(this.getTime());
+   date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
+   return date.getFullYear();
+};
+
+for (let i = 0; i < 10; i++) {
+   let thisDate2 = new Date(2026, i, 4);
+   let numberOfFirstWeekThisMonth = thisDate2.getWeek();
+   console.log("thisDate: ", thisDate2, "numberOfFirstWeekThisMonth: ", numberOfFirstWeekThisMonth);
 }
