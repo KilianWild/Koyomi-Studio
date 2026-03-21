@@ -564,6 +564,8 @@ koyomiBuilderButton_Save.addEventListener("click", async () => {
    loaderText.classList.remove("visible");
    koyomiBuilderMainSection.classList.add("koyomi-builder__month-collection-container--active");
 
+   spanLoadedPages.textContent = 0;
+
    function loadImage(src) {
       return new Promise((resolve, reject) => {
          const img = new Image();
@@ -1257,6 +1259,7 @@ Date.prototype.getWeek = function () {
    return weekNo;
 };
 // Returns the four-digit year corresponding to the ISO week of the date.
+
 Date.prototype.getWeekYear = function () {
    var date = new Date(this.getTime());
    date.setDate(date.getDate() + 3 - ((date.getDay() + 6) % 7));
