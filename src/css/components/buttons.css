@@ -1,6 +1,10 @@
 .button-svg-lines {
    stroke: var(--color-holiday);
+
    stroke-width: 1.5px;
+
+
+>
    position: absolute;
 
    left: 0;
