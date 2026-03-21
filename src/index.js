@@ -330,20 +330,10 @@ koyomiStudioForm.addEventListener("submit", (event) => {
       startPanelNextMonth = numberOfDaysInThisMonth + startWeekDayThisMonth;
       weekNrOfLastWeekOfLastYear = new Date(currentYear - 1, 11, 28).getWeek(); //--< ISO: Dec 28. will always be the last week of the year in ISO.
 
-      console.log("---------------------");
-      console.log("startWeekDayThisMonth: ", startWeekDayThisMonth);
-      console.log("selectedFirstWeekdayISO: ", selectedFirstWeekdayISO);
-      console.log("numberOfDaysInThisMonth + startWeekDayThisMonth: ", numberOfDaysInThisMonth + startWeekDayThisMonth);
-      console.log("startWeekdayOfThisYearISO: ", startWeekdayOfThisYearISO, " ISO");
-
       jan4GridPosition = startWeekDayThisMonth + 3;
-      console.log("jan4GridPosition: ", jan4GridPosition);
-      console.log("weekNrOfLastWeekOfLastYear: ", weekNrOfLastWeekOfLastYear);
 
       //--< check if first row of week is week one. If not add one week to the calendar;
       if (jan4GridPosition < 7) firstRowOfYearIsWeekOne = true;
-
-      console.log("firstRowOfYearIsWeekOne: ", firstRowOfYearIsWeekOne);
 
       //--<  color holiday >--
 
@@ -756,10 +746,8 @@ allButtons.forEach((button) => {
       animationTimeouts = [];
 
       const buttonLineEffect = event.target.querySelector('[data-js="button-effect-lines"]');
-      console.log("buttonLineEffect: ", buttonLineEffect);
 
       buttonLineEffect.querySelectorAll("line").forEach((line, index) => {
-         console.log("line: ", line);
          const length = line.getTotalLength();
          line.style.strokeDasharray = length;
          line.style.strokeDashoffset = length;
@@ -936,9 +924,8 @@ function createDayNameArray(svg, selectedLanguage) {
       }, index * 200);
 
       text.textContent =
-         languages.find((language) => language.lng == selectedLanguage)[
-            `weekday_${(index - startWeekDayThisMonth - 1 + 7) % 7}`
-         ] + ".";
+         languages.find((language) => language.lng == selectedLanguage)[`weekday_${(element.panel - 1 - selectedFirstWeekday + 7) % 7}`] +
+         ".";
 
       svg.append(text);
    });
@@ -956,16 +943,9 @@ function createWeekNumberArray(svg, selectedLanguage) {
    for (let v = 0; v < ROWS; v++) {
       arr.push({
          panel: v + 1,
-         x:
-            2 +
-            (constructWeekWidthRel * COORDINATE_SCALE) / 2 +
-            (constructTotalDayGridWidthRel + constructGapWidthRel) * COORDINATE_SCALE,
-         y:
-            offsetTop * COORDINATE_SCALE +
-            (constructWeekHeightRel * COORDINATE_SCALE) / 10 +
-            dayRowHightRel * COORDINATE_SCALE * v,
-         weekNr:
-            !firstRowOfYearIsWeekOne && v == 0 && currentMonth == 0 ? weekNrOfLastWeekOfLastYear : numberOfFirstWeekThisMonth + v,
+         x: 2 + (constructWeekWidthRel * COORDINATE_SCALE) / 2 + (constructTotalDayGridWidthRel + constructGapWidthRel) * COORDINATE_SCALE,
+         y: offsetTop * COORDINATE_SCALE + (constructWeekHeightRel * COORDINATE_SCALE) / 10 + dayRowHightRel * COORDINATE_SCALE * v,
+         weekNr: !firstRowOfYearIsWeekOne && v == 0 && currentMonth == 0 ? weekNrOfLastWeekOfLastYear : numberOfFirstWeekThisMonth + v,
       });
    }
 
@@ -1067,9 +1047,7 @@ function createLinesArray(svg) {
          //--<  fade out previous and next month
 
          obj.isFaded =
-            (v == 0 && h < startWeekDayThisMonth) || (v == ROWS && h >= startWeekDayNextMonth && startPanelNextMonth <= 35)
-               ? true
-               : false;
+            (v == 0 && h < startWeekDayThisMonth) || (v == ROWS && h >= startWeekDayNextMonth && startPanelNextMonth < 35) ? true : false;
          arr.push(obj);
       }
    }
@@ -1092,7 +1070,7 @@ function createLinesArray(svg) {
          //--<  fade out previous and next month
          obj.isFaded =
             (v == 0 && h < startWeekDayThisMonth) ||
-            (v == ROWS - 1 && (h > startWeekDayNextMonth || startWeekDayNextMonth == 0) && startPanelNextMonth <= 35)
+            (v == ROWS - 1 && (h > startWeekDayNextMonth || startWeekDayNextMonth == 0) && startPanelNextMonth < 35)
                ? true
                : false;
 
@@ -1288,5 +1266,4 @@ Date.prototype.getWeekYear = function () {
 for (let i = 0; i < 10; i++) {
    let thisDate2 = new Date(2026, i, 4);
    let numberOfFirstWeekThisMonth = thisDate2.getWeek();
-   console.log("thisDate: ", thisDate2, "numberOfFirstWeekThisMonth: ", numberOfFirstWeekThisMonth);
 }

@@ -184,7 +184,7 @@ svg text {
    height: 50px;
 
    opacity: 0;
-   background-color: rgb(20, 20, 20, 0.7);
+   background-color: rgb(12, 12, 12, 0.7);
    transition: opacity 0.5s ease-in-out;
 
    border-radius: 10px;
@@ -255,7 +255,7 @@ svg text {
    aspect-ratio: 1;
    border-radius: 50%;
    mask:
-      conic-gradient(#000, #0000) subtract,
+      conic-gradient(#000, #0000, #0000) subtract,
       conic-gradient(#000 0 0) content-box;
    animation: spin2 2s linear infinite;
    opacity: 0;
